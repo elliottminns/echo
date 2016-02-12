@@ -1,3 +1,9 @@
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
 enum ConcurrencyType {
     case Serial
     case Concurrent

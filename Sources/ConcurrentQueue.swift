@@ -1,10 +1,8 @@
-//
-//  ConcurrentQueue.swift
-//  Echo
-//
-//  Created by Elliott Minns on 12/02/2016.
-//  Copyright © 2016 Elliott Minns. All rights reserved.
-//
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
 final class ConcurrentQueue {
     let identifier: String

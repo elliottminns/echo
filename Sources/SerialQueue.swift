@@ -1,3 +1,8 @@
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
 
 final class SerialQueue {
     

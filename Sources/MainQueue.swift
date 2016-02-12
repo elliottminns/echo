@@ -1,4 +1,10 @@
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
 final class MainQueue {
     
     let identifier: String
