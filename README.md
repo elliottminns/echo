@@ -1,6 +1,6 @@
 # Echo
 
-Echo is a simple way to create an event loop and use GCD in Linux
+Echo is a simple way to create an event loop and use GCD in Swift for Linux and OSX
 
 ## How to use?
 
