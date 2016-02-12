@@ -1,4 +1,4 @@
-// import Foundation
+import Foundation
 
 public class Echo {
 
@@ -16,7 +16,11 @@ public class Echo {
 
     func begin() {
         if !running {
+            #if os(Linux)
             mainQueue.run()
+            #else
+            NSRunLoop.mainRunLoop().run()
+            #endif
         }
     }
 
