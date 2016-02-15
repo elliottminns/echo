@@ -14,13 +14,13 @@ public func dispatch_queue_create(name: String,
     _ type: Int ) -> dispatch_queue_t {
 
     let queue: DispatchQueue
-    
+
     if type == DISPATCH_QUEUE_SERIAL {
         queue = SerialQueue(identifier: name)
     } else {
         queue = ConcurrentQueue(identifier: name)
     }
-    
+
     return queue
 }
 

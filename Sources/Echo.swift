@@ -16,21 +16,27 @@ public class Echo {
 
     func begin() {
         if !running {
+            running = true
             #if os(Linux)
             mainQueue.run()
             #else
-            NSRunLoop.mainRunLoop().run()
+            let resolution = 1.0;
+            var isRunning: Bool = false
+            repeat {
+                let next = NSDate(timeIntervalSinceNow: resolution)
+                isRunning = NSRunLoop.mainRunLoop()
+                    .runMode(NSDefaultRunLoopMode, beforeDate: next)
+            } while (running && isRunning)
             #endif
+
         }
     }
 
     func exit() {
         if running {
+            running = false
             #if os(Linux)
             mainQueue.exit()
-            #else
-            let loop = NSRunLoop.mainRunLoop().getCFRunLoop()
-            CFRunLoopStop(loop)
             #endif
         }
     }
