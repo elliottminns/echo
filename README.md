@@ -10,12 +10,28 @@ Using Echo is simple, to start the main run loop, just call:
 Echo.beginEventLoop()
 ```
 
+or
+
+```swift
+Echo.begin()
+```
+
+When you want to exit the loop, just call `exit`
+
+```swift
+Echo.exit()
+```
+
 ## How to use GCD?
 
 Using GCD is the same as with Mac OS X (With limited current features)
 
 ```swift
 main.swift
+```
+
+```swift
+import Echo
 
 dispatch_async(dispatch_get_global_queue(0, 0)) {
     for i in 0 ..< 1000 {
@@ -39,6 +55,6 @@ The above code snippet will print all the numbers on the main loop whilst loopin
 
 ## Is that it?
 
-Yep, it's that simple. 
+Yep, it's that simple.
 
-Please feel free to fork and extend to the rest of GCD's functions for Linux 
+Please feel free to fork and extend to the rest of GCD's functions for Linux
