@@ -24,7 +24,26 @@ public class Echo {
         }
     }
 
+    func exit() {
+        if running {
+            #if os(Linux)
+            mainQueue.exit()
+            #else
+            let loop = NSRunLoop.mainRunLoop().getCFRunLoop()
+            CFRunLoopStop(loop)
+            #endif
+        }
+    }
+
+    public class func begin() {
+        Echo.instance.begin()
+    }
+
     public class func beginEventLoop() {
         Echo.instance.begin()
+    }
+
+    public class func exit() {
+        Echo.instance.exit()
     }
 }

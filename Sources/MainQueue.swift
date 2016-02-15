@@ -6,42 +6,47 @@
 #endif
 
 final class MainQueue {
-    
+
     let identifier: String
-    
+
     var events: [() -> ()]
-    
+
     var eventMutex: pthread_mutex_t
-    
+
     var eventCondition: pthread_cond_t
-    
+
+    var running: Bool
+
     init(identifier: String) {
-        
+
         self.identifier = identifier
-        self.events = []
-        self.eventMutex = pthread_mutex_t()
-        self.eventCondition = pthread_cond_t()
+        events = []
+        eventMutex = pthread_mutex_t()
+        eventCondition = pthread_cond_t()
+        running = false
     }
 }
 
 extension MainQueue: DispatchQueue {
-    
+
     func run() {
-        
+
+        running = true
+
         var conditionMutex = pthread_mutex_t()
-        
+
         pthread_mutex_init(&eventMutex, nil)
-        
+
         pthread_mutex_init(&conditionMutex, nil)
-        
+
         pthread_cond_init (&eventCondition, nil)
-        
+
         pthread_mutex_lock(&conditionMutex)
-        
-        while true {
-            
+
+        while running {
+
             pthread_cond_wait(&eventCondition, &conditionMutex)
-            
+
             while events.count > 0 {
                 pthread_mutex_lock(&eventMutex)
                 let event = events.removeFirst()
@@ -49,5 +54,10 @@ extension MainQueue: DispatchQueue {
                 event()
             }
         }
+    }
+
+    func exit() {
+        running = false
+        pthread_cond_signal(&eventCondition)
     }
 }
