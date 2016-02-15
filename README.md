@@ -39,9 +39,13 @@ dispatch_async(dispatch_get_global_queue(0, 0)) {
             print(i)
         }
     }
+
+    dispatch_async(dispatch_get_main_queue()) {
+        Echo.exit()
+    }
 }
 
-Echo.beginEventLoop()
+Echo.begin()
 
 ```
 
