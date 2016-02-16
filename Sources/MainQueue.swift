@@ -45,7 +45,6 @@ extension MainQueue: DispatchQueue {
 
         while running {
 
-
             while events.count > 0 {
                 pthread_mutex_lock(&eventMutex)
                 let event = events.removeFirst()

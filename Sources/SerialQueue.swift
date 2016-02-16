@@ -44,7 +44,6 @@ extension SerialQueue: DispatchQueue {
             
             while true {
                 
-                
                 while self.events.count > 0 {
                     pthread_mutex_lock(&self.eventMutex)
                     let event = self.events.removeFirst()
