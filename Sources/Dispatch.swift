@@ -4,7 +4,7 @@
     import Darwin
 #endif
 
-//#if os(Linux)
+#if os(Linux)
 public let DISPATCH_QUEUE_CONCURRENT = 200
 public let DISPATCH_QUEUE_SERIAL = 201
 
@@ -58,4 +58,4 @@ public func dispatch_get_main_queue() -> dispatch_queue_t {
     return Echo.instance.mainQueue
 }
 
-//#endif
+#endif
