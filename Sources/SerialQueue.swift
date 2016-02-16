@@ -44,7 +44,6 @@ extension SerialQueue: DispatchQueue {
             
             while true {
                 
-                pthread_cond_wait(&self.eventCondition, &conditionMutex)
                 
                 while self.events.count > 0 {
                     pthread_mutex_lock(&self.eventMutex)
@@ -52,6 +51,8 @@ extension SerialQueue: DispatchQueue {
                     pthread_mutex_unlock(&self.eventMutex)
                     event()
                 }
+
+                pthread_cond_wait(&self.eventCondition, &conditionMutex)
             }
         }
         

@@ -45,7 +45,6 @@ extension MainQueue: DispatchQueue {
 
         while running {
 
-            pthread_cond_wait(&eventCondition, &conditionMutex)
 
             while events.count > 0 {
                 pthread_mutex_lock(&eventMutex)
@@ -53,6 +52,8 @@ extension MainQueue: DispatchQueue {
                 pthread_mutex_unlock(&eventMutex)
                 event()
             }
+
+            pthread_cond_wait(&eventCondition, &conditionMutex)
         }
     }
 

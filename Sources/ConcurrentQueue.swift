@@ -16,7 +16,6 @@ final class ConcurrentQueue {
     var loopThread: pthread_t
     
     init(identifier: String) {
-        
         self.identifier = identifier
         self.events = []
         self.eventMutex = pthread_mutex_t()
@@ -41,9 +40,6 @@ extension ConcurrentQueue: DispatchQueue {
             pthread_mutex_lock(&conditionMutex)
             
             while true {
-                
-                pthread_cond_wait(&self.eventCondition, &conditionMutex)
-                
                 while self.events.count > 0 {
                     pthread_mutex_lock(&self.eventMutex)
                     let event = self.events.removeFirst()
@@ -51,6 +47,7 @@ extension ConcurrentQueue: DispatchQueue {
                     var thread = pthread_t()
                     self.runBlock(event, onThread: &thread)
                 }
+                pthread_cond_wait(&self.eventCondition, &conditionMutex)
             }
         }
         
