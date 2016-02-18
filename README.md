@@ -1,4 +1,4 @@
-![alt tag](http://i.imgur.com/l80REo4.png width="200")
+![alt tag](http://i.imgur.com/l80REo4.png width="100")
 
 Echo is a simple way to create an event loop and use GCD in Swift for Linux and OSX
 
