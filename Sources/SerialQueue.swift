@@ -22,7 +22,7 @@ final class SerialQueue {
         self.events = []
         self.eventMutex = pthread_mutex_t()
         self.eventCondition = pthread_cond_t()
-        self.thread = pthread_t(nil)
+        self.thread = pthread_t()
         run()
     }
 }
