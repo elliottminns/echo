@@ -1,4 +1,4 @@
-# Echo
+![drawing](http://i.imgur.com/Zqu5QcG.png width="100")
 
 Echo is a simple way to create an event loop and use GCD in Swift for Linux and OSX
 
@@ -57,7 +57,7 @@ The above code snippet will print all the numbers on the main loop whilst loopin
 
 - [Blackfish](http://github.com/elliottminns/blackfish)
 
-- [Orca](http://github.com/elliottminns/orca) (Coming soon...)
+- [Orca](http://github.com/elliottminns/orca)
 
 ## Is that it?
 
