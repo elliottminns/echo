@@ -2,6 +2,8 @@
 
 Echo is a simple way to create an event loop and use GCD in Swift for Linux and OSX
 
+![Travis-Badge](https://travis-ci.org/elliottminns/echo.svg?branch=master)
+
 ## How to use?
 
 Using Echo is simple, to start the main run loop, just call:
