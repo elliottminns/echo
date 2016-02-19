@@ -57,7 +57,7 @@ The above code snippet will print all the numbers on the main loop whilst loopin
 
 - [Blackfish](http://github.com/elliottminns/blackfish)
 
-- [Orca](http://github.com/elliottminns/orca) (Coming soon...)
+- [Orca](http://github.com/elliottminns/orca)
 
 ## Is that it?
 
