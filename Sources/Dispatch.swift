@@ -26,6 +26,7 @@ public func dispatch_queue_create(name: String,
 
 public let DISPATCH_QUEUE_PRIORITY_HIGH = 0,
     DISPATCH_QUEUE_PRIORITY_LOW = 0,
+    DISPATCH_QUEUE_PRIORITY_DEFAULT = 0,
     DISPATCH_QUEUE_PRIORITY_BACKGROUND = 0
 
 public func dispatch_get_global_queue( type: Int, _ flags: Int ) -> dispatch_queue_t {
