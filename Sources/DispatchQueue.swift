@@ -33,7 +33,7 @@ extension DispatchQueue {
         pthread_cond_signal(&eventCondition)
     }
 
-    func runBlock(block: () -> (), inout onThread thread: pthread_t) {
+    func runBlock(block: () -> (), onThread thread: inout pthread_t) {
         let holder = Unmanaged.passRetained(pthreadBlock(block: block))
 
         let pointer = UnsafeMutablePointer<Void>(holder.toOpaque())
