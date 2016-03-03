@@ -6,15 +6,15 @@ import Vaquita
     import Glibc
 #endif
 
-protocol SocketServerDelegate: class {
+public protocol SocketServerDelegate: class {
     func socketServer(socketServer: SocketServer,
                       didRecieveRequest request: Request,
                                         withResponse response: Response)
 }
 
-public class SocketServer {
+public public class SocketServer {
 
-    let socketManager: SocketManager
+    public let socketManager: SocketManager
 
     private var listenSocket: Socket = Socket(rawSocket: -1)
 
@@ -26,7 +26,7 @@ public class SocketServer {
 
     private let socketParser: SocketParser
 
-    weak var delegate: SocketServerDelegate?
+    public weak var delegate: SocketServerDelegate?
 
     init() {
         socketManager = SocketManager()
@@ -34,7 +34,7 @@ public class SocketServer {
         socketParser = SocketParser()
     }
 
-    func start(listenPort: Int) throws {
+    public func start(listenPort: Int) throws {
 
         self.stop()
 
@@ -60,11 +60,11 @@ public class SocketServer {
         }
     }
 
-    func loop() {
+    public func loop() {
         Echo.beginEventLoop()
     }
 
-    func handleConnection(socket: Socket) {
+    public func handleConnection(socket: Socket) {
 
         let address = try? socket.peername()
 
@@ -86,7 +86,7 @@ public class SocketServer {
         }
     }
 
-    func stop() {
+    public func stop() {
 
         self.listenSocket.release()
 
