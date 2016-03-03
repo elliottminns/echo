@@ -105,7 +105,7 @@ public struct Socket {
         }
     }
 
-    func read() throws -> UInt8 {
+    public func read() throws -> UInt8 {
         var buffer = [UInt8](count: 1, repeatedValue: 0)
         let next = recv(self.rawSocket as Int32, &buffer, Int(buffer.count), 0)
         if next <= 0 {
@@ -118,7 +118,7 @@ public struct Socket {
 
     private static let NL = UInt8(10)
 
-    func readLine() throws -> String {
+    public func readLine() throws -> String {
         var characters: String = ""
         var n: UInt8 = 0
         repeat {
@@ -128,7 +128,7 @@ public struct Socket {
         return characters
     }
 
-    func peername() throws -> String {
+    public func peername() throws -> String {
 
         var addr = sockaddr(), len: socklen_t = socklen_t(sizeof(sockaddr))
 
@@ -149,11 +149,11 @@ public struct Socket {
         return name
     }
 
-    static func descriptionOfLastError() -> String {
+    public static func descriptionOfLastError() -> String {
         return String.fromCString(UnsafePointer(strerror(errno))) ?? "Error: \(errno)"
     }
 
-    static func setNoSigPipe(socket: Int32) {
+    public static func setNoSigPipe(socket: Int32) {
         #if os(Linux)
             // There is no SO_NOSIGPIPE in Linux (nor some other systems). You can instead use the MSG_NOSIGNAL flag when calling send(),
             // or use signal(SIGPIPE, SIG_IGN) to make your entire application ignore SIGPIPE.
@@ -164,7 +164,7 @@ public struct Socket {
         #endif
     }
 
-    static func htonsPort(port: in_port_t) -> in_port_t {
+    public static func htonsPort(port: in_port_t) -> in_port_t {
         #if os(Linux)
             return port.bigEndian //use htons(). LLVM Crash currently
         #else
