@@ -53,19 +53,19 @@ public struct Socket {
 
     var peerName: String?
 
-    init(rawSocket: Int32) {
+    public init(rawSocket: Int32) {
         self.rawSocket = rawSocket
     }
 
-    func release() {
+    public func release() {
         SocketManager.closeRawSocket(rawSocket)
     }
 
-    func shutdown() {
+    public func shutdown() {
         SocketManager.shutdownRawSocket(rawSocket)
     }
 
-    func acceptClientSocket() throws -> Socket {
+    public func acceptClientSocket() throws -> Socket {
         var addr = sockaddr()
         var len: socklen_t = 0
         let clientSocket = accept(rawSocket, &addr, &len)
@@ -76,12 +76,12 @@ public struct Socket {
         return Socket(rawSocket: clientSocket)
     }
 
-    func writeString(string: String) throws {
+    public func writeString(string: String) throws {
         let data = Data(string: string)
         try writeData(data)
     }
 
-    func writeData(data: Data) throws {
+    public func writeData(data: Data) throws {
         try data.bytes.withUnsafeBufferPointer {
 
             var sent = 0
