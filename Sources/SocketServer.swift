@@ -23,7 +23,7 @@ public class SocketServer {
 
     public weak var delegate: SocketServerDelegate?
 
-    init() {
+    public init() {
         socketManager = SocketManager()
         queue = dispatch_queue_create("blackfish.queue.request", DISPATCH_QUEUE_CONCURRENT)
     }
