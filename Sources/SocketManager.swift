@@ -5,7 +5,7 @@ import Darwin
 #endif
 
 
-class SocketManager {
+public class SocketManager {
 
     func createListenSocket(port: Int,
         pendingConnectionCount: Int32 = SOMAXCONN) throws -> Socket {

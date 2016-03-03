@@ -4,14 +4,12 @@
     import Foundation
 #endif
 
-import Vaquita
-
-enum SocketType {
+public enum SocketType {
     case TCP
     case UDP
 }
 
-enum SocketError: ErrorType {
+public enum SocketError: ErrorType {
     case SocketCreationFailed(String)
     case SocketSettingReUseAddrFailed(String)
     case BindFailed(String)
@@ -23,7 +21,7 @@ enum SocketError: ErrorType {
     case AcceptFailed(String)
     case RecvFailed(String)
 
-    var errorMessage: String? {
+    public var errorMessage: String? {
         switch self {
         case let .SocketCreationFailed(message):
             return message
@@ -49,9 +47,9 @@ enum SocketError: ErrorType {
     }
 }
 
-struct Socket {
+public struct Socket {
 
-    let rawSocket: Int32
+    public let rawSocket: Int32
 
     var peerName: String?
 
@@ -178,7 +176,7 @@ struct Socket {
 
 extension Socket: Hashable {
 
-    var hashValue: Int {
+    public var hashValue: Int {
 
         return Int(self.rawSocket)
     }
@@ -187,6 +185,6 @@ extension Socket: Hashable {
 extension Socket: Equatable {
 }
 
-func ==(socket1: Socket, socket2: Socket) -> Bool {
+public func ==(socket1: Socket, socket2: Socket) -> Bool {
     return socket1.rawSocket == socket2.rawSocket
 }
