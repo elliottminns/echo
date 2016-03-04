@@ -44,7 +44,7 @@ enum EncodingError: ErrorType {
 
 public struct Data {
 
-    public let bytes: [UInt8]
+    public var bytes: [UInt8]
 
     public var size: Int {
         return self.bytes.count * sizeof(UInt8)
@@ -68,5 +68,18 @@ public struct Data {
         }
 
         return str
+    }
+    
+    public mutating func append(bytes: [UInt8]) {
+        self.bytes += bytes
+    }
+    
+    public mutating func append(buffer: UnsafePointer<Void>, length: Int) {
+        let bytes = UnsafePointer<UInt8>(buffer)
+        var byteArray: [UInt8] = []
+        for i in 0.stride(to: length, by: 1) {
+            byteArray.append(bytes[i])
+        }
+        self.append(byteArray)
     }
 }
