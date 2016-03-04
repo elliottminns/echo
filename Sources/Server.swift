@@ -12,7 +12,7 @@ internal func uv_connection_cb(request: UnsafeMutablePointer<uv_stream_t>, statu
 }
 
 public protocol ServerDelegate: class {
-    func didRecieveConnection(connection: Connection)
+    func server(server: Server, didRecieveConnection connection: Connection)
 }
 
 public final class Server {
@@ -21,13 +21,19 @@ public final class Server {
     
     var bind_addr: UnsafeMutablePointer<sockaddr_in>
     
-    unowned let delegate: ServerDelegate
+    public weak var delegate: ServerDelegate?
     
-    public init(delegate: ServerDelegate) {
+    var connections: Set<Connection>
+    
+    var currentIdentifier: Int
+    
+    public init() {
         tcp = UnsafeMutablePointer<uv_tcp_t>.alloc(1)
         bind_addr = UnsafeMutablePointer<sockaddr_in>.alloc(1)
-        self.delegate = delegate
+        connections = []
+        currentIdentifier = 0
         tcp.memory.data = unsafeBitCast(self, UnsafeMutablePointer<Void>.self)
+        
     }
     
     deinit {
@@ -35,7 +41,7 @@ public final class Server {
         bind_addr.destroy()
     }
     
-    public func listen(port: Int) throws {
+    public func listen(port: Int, handler: (error: ErrorType?) -> ()) {
         
         uv_tcp_init(uv_default_loop(), tcp)
         
@@ -48,18 +54,34 @@ public final class Server {
         let result = uv_listen(stream, 1000, uv_connection_cb)
         
         guard result == 0 else {
-            throw ServerError.ListenError
+            handler(error: ServerError.ListenError)
+            return
         }
+        
+        handler(error: nil)
         
         uv_run(uv_default_loop(), UV_RUN_DEFAULT)
     }
     
     public func handleConnection(stream: UnsafeMutablePointer<uv_stream_t>) {
+        let connection = Connection(connection: stream, delegate: self, identifier: currentIdentifier)
+        currentIdentifier += 1
+        connections.insert(connection)
         do {
-            let connection = try Connection(connection: stream)
-            self.delegate.didRecieveConnection(connection)
+            try connection.beginRead()
         } catch {
-            
+            connections.remove(connection)
         }
+    }
+}
+
+extension Server: ConnectionDelegate {
+    
+    func connection(connection: Connection, didReadData: Data) {
+        self.delegate?.server(self, didRecieveConnection: connection)
+    }
+    
+    func connectionDidFinish(connection: Connection) {
+        connections.remove(connection)
     }
 }
