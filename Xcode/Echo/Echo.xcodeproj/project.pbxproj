@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4F0699511C8998C400ABE945 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F06994D1C8998C400ABE945 /* Data.swift */; };
+		4F0699521C8998C400ABE945 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F06994E1C8998C400ABE945 /* Socket.swift */; };
+		4F0699531C8998C400ABE945 /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F06994F1C8998C400ABE945 /* SocketManager.swift */; };
+		4F0699541C8998C400ABE945 /* SocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0699501C8998C400ABE945 /* SocketServer.swift */; };
+		4F0699561C89991100ABE945 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0699551C89991100ABE945 /* Server.swift */; };
+		4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F0699901C89BF9A0004EA41 /* Connection.swift */; };
 		4F59CFCB1C6E460E008D87E6 /* Echo.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F59CFCA1C6E460E008D87E6 /* Echo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F59CFD21C6E460E008D87E6 /* Echo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F59CFC71C6E460E008D87E6 /* Echo.framework */; };
 		4F59CFD71C6E460E008D87E6 /* EchoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFD61C6E460E008D87E6 /* EchoTests.swift */; };
@@ -50,6 +56,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4F06994D1C8998C400ABE945 /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
+		4F06994E1C8998C400ABE945 /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
+		4F06994F1C8998C400ABE945 /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketManager.swift; sourceTree = "<group>"; };
+		4F0699501C8998C400ABE945 /* SocketServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketServer.swift; sourceTree = "<group>"; };
+		4F0699551C89991100ABE945 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		4F0699901C89BF9A0004EA41 /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		4F59CFC71C6E460E008D87E6 /* Echo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Echo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F59CFCA1C6E460E008D87E6 /* Echo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Echo.h; sourceTree = "<group>"; };
 		4F59CFCC1C6E460E008D87E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -135,12 +147,18 @@
 		4F59CFE11C6E4625008D87E6 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				4F06994D1C8998C400ABE945 /* Data.swift */,
+				4F06994E1C8998C400ABE945 /* Socket.swift */,
+				4F06994F1C8998C400ABE945 /* SocketManager.swift */,
+				4F0699501C8998C400ABE945 /* SocketServer.swift */,
 				4F59CFE21C6E4625008D87E6 /* Dispatch.swift */,
 				4F59CFE31C6E4625008D87E6 /* DispatchQueue.swift */,
 				4F59CFE41C6E4625008D87E6 /* Echo.swift */,
 				4F59CFF31C6E4659008D87E6 /* MainQueue.swift */,
 				4F59CFF51C6E4661008D87E6 /* SerialQueue.swift */,
 				4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */,
+				4F0699551C89991100ABE945 /* Server.swift */,
+				4F0699901C89BF9A0004EA41 /* Connection.swift */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -284,11 +302,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F0699521C8998C400ABE945 /* Socket.swift in Sources */,
+				4F0699541C8998C400ABE945 /* SocketServer.swift in Sources */,
+				4F0699511C8998C400ABE945 /* Data.swift in Sources */,
 				4F59CFF61C6E4661008D87E6 /* SerialQueue.swift in Sources */,
 				4F59CFF41C6E4659008D87E6 /* MainQueue.swift in Sources */,
 				4F59CFF81C6E466A008D87E6 /* ConcurrentQueue.swift in Sources */,
+				4F0699561C89991100ABE945 /* Server.swift in Sources */,
+				4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */,
 				4F59CFE71C6E4625008D87E6 /* Echo.swift in Sources */,
 				4F59CFE51C6E4625008D87E6 /* Dispatch.swift in Sources */,
+				4F0699531C8998C400ABE945 /* SocketManager.swift in Sources */,
 				4F59CFE61C6E4625008D87E6 /* DispatchQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,10 +450,12 @@
 				INFOPLIST_FILE = Echo/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.elliottminns.Echo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/Libuv-0.1.0";
 			};
 			name = Debug;
 		};
@@ -446,10 +472,12 @@
 				INFOPLIST_FILE = Echo/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.elliottminns.Echo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/Libuv-0.1.0";
 			};
 			name = Release;
 		};
@@ -478,6 +506,7 @@
 		4F59CFF11C6E462E008D87E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -485,6 +514,7 @@
 		4F59CFF21C6E462E008D87E6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
