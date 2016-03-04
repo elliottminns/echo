@@ -9,7 +9,6 @@ let uvModule = "https://github.com/elliottminns/uv-module.git"
 let package = Package(
     name: "Echo",
     dependencies: [
-        .Package(url: uvModule
-                 majorVersion: 0)
+        .Package(url: uvModule, majorVersion: 0)
     ]
 )
