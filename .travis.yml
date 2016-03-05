@@ -5,7 +5,7 @@ dist: trusty
 
 install:
     - sudo apt-get install automake
-    - sudo apt-get install libtoolize
+    - sudo apt-get install libtool
     - curl -O http://dist.libuv.org/dist/v1.8.0/libuv-v1.8.0.tar.gz | tar xz -C libuv &> /dev/null
     - cd libuv && sh autogen.sh
     - ./configure
