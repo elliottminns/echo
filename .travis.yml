@@ -6,12 +6,13 @@ dist: trusty
 install:
     - sudo apt-get install automake
     - sudo apt-get install libtool
+    - mkdir libuv
     - curl -O http://dist.libuv.org/dist/v1.8.0/libuv-v1.8.0.tar.gz -s | tar xz -C libuv &> /dev/null
-    - cd libuv && sh autogen.sh
+    - cd libuv/libuv-v1.8.0 && sh autogen.sh
     - ./configure
     - make
     - sudo make install
-    - cd ..
+    - cd ../../
     - mkdir swift
     - curl https://swift.org/builds/development/ubuntu1404/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a/swift-DEVELOPMENT-SNAPSHOT-2016-03-01-a-ubuntu14.04.tar.gz -s | tar xz -C swift &> /dev/null
 
