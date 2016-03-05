@@ -7,7 +7,7 @@ install:
     - sudo apt-get install automake
     - sudo apt-get install libtool
     - mkdir libuv
-    - curl -O http://dist.libuv.org/dist/v1.8.0/libuv-v1.8.0.tar.gz -s | tar xz -C libuv &> /dev/null
+    - curl http://dist.libuv.org/dist/v1.8.0/libuv-v1.8.0.tar.gz -s | tar xz -C libuv &> /dev/null
     - cd libuv/libuv-v1.8.0 && sh autogen.sh
     - ./configure
     - make
