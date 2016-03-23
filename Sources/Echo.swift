@@ -17,17 +17,19 @@ public class Echo {
     func begin() {
         if !running {
             running = true
-            #if os(Linux)
+            //#if os(Linux)
             mainQueue.run()
-            #else
-            let resolution = 1.0;
-            var isRunning: Bool = false
-            repeat {
-                let next = NSDate(timeIntervalSinceNow: resolution)
-                isRunning = NSRunLoop.mainRunLoop()
-                    .runMode(NSDefaultRunLoopMode, beforeDate: next)
-            } while (running && isRunning)
-            #endif
+            //#else
+            //let resolution = 1.0;
+            //var isRunning: Bool = false
+            //repeat {
+                //let next = NSDate(timeIntervalSinceNow: resolution)
+                //let loop = NSRunLoop.mainRunLoop()
+
+                //isRunning = loop.runMode(NSDefaultRunLoopMode, 
+                //                         beforeDate: next)
+            //} while (running && isRunning)
+            //#endif
 
         }
     }

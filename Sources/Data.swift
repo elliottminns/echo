@@ -38,7 +38,7 @@ extension UInt8: ByteType {
     }
 }
 
-enum EncodingError: ErrorType {
+enum EncodingError: ErrorProtocol {
     case Failed
 }
 
@@ -77,7 +77,7 @@ public struct Data {
     public mutating func append(buffer: UnsafePointer<Void>, length: Int) {
         let bytes = UnsafePointer<UInt8>(buffer)
         var byteArray: [UInt8] = []
-        for i in 0.stride(to: length, by: 1) {
+        for i in stride(from: 0, to: length, by: 1) {
             byteArray.append(bytes[i])
         }
         self.append(byteArray)

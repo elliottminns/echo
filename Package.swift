@@ -3,7 +3,7 @@ import PackageDescription
 let package = Package(
     name: "Echo",
     dependencies: [
-        .Package(url: "https://github.com/elliottminns/uv-module.git",
+        .Package(url: "https://github.com/elliottminns/libuv-osx",
                  majorVersion: 0)
     ]
 )

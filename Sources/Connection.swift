@@ -1,30 +1,31 @@
 import CUV
 
-enum ConnectionError: ErrorType {
+enum ConnectionError: ErrorProtocol {
     case CouldNotAccept
 }
 
 func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>, size: size_t, buffer: UnsafeMutablePointer<uv_buf_t>) {
-    buffer.memory = uv_buf_init(UnsafeMutablePointer<Int8>.alloc(size), UInt32(size))
+    let ptr = UnsafeMutablePointer<Int8>(allocatingCapacity: size)
+    buffer.pointee = uv_buf_init(ptr, UInt32(size))
 }
 
 func on_client_read(stream: UnsafeMutablePointer<uv_stream_t>, size: Int, buffer: UnsafePointer<uv_buf_t>) {
-    let data = stream.memory.data
-    let callback = unsafeBitCast(data, ConnectionCallback.self)
+    let data = stream.pointee.data
+    let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     let connection = callback.connection
     connection?.read(stream, size: size, buffer: buffer)
 }
 
 func on_client_write(writeStream: UnsafeMutablePointer<uv_write_t>, status: Int32) {
-    let data = writeStream.memory.data
-    let callback = unsafeBitCast(data, ConnectionCallback.self)
+    let data = writeStream.pointee.data
+    let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     let connection = callback.connection
     connection?.close(writeStream)
 }
 
 func on_close(handle: UnsafeMutablePointer<uv_handle_t>) {
-    let data = handle.memory.data
-    let callback = unsafeBitCast(data, ConnectionCallback.self)
+    let data = handle.pointee.data
+    let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     if let connection = callback.connection {
         connection.delegate.connectionDidFinish(connection)
     }
@@ -37,7 +38,7 @@ class ConnectionCallback {
 }
 
 protocol ConnectionDelegate {
-    func connection(connection: Connection, didReadData: Data)
+    func connection(connection: Connection, didReadData data: Data)
     func connectionDidFinish(connection: Connection)
 }
 
@@ -63,7 +64,7 @@ final public class Connection: Hashable {
     
     init(connection: UnsafeMutablePointer<uv_stream_t>, delegate: ConnectionDelegate, identifier: Int) {
         
-        client = UnsafeMutablePointer<uv_tcp_t>.alloc(1)
+        client = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
         
         self.identifier = identifier
         
@@ -79,11 +80,13 @@ final public class Connection: Hashable {
     }
     
     deinit {
-        client.dealloc(1)
+        client.deinitialize(count: 1)
     }
     
     func beginRead() throws {
-        client.memory.data = unsafeBitCast(callback, UnsafeMutablePointer<Void>.self)
+        client.pointee.data = unsafeBitCast(callback, 
+                                           to: UnsafeMutablePointer<Void>.self)
+
         uv_tcp_init(uv_default_loop(), client)
         
         let stream = UnsafeMutablePointer<uv_stream_t>(client)
@@ -96,23 +99,35 @@ final public class Connection: Hashable {
         uv_read_start(stream, alloc_buffer, on_client_read)
     }
     
-    func read(stream: UnsafeMutablePointer<uv_stream_t>, size: Int, buffer: UnsafePointer<uv_buf_t>) {
-        data.append(buffer.memory.base, length: size)
-        buffer.memory.base.dealloc(size)
+    func read(stream: UnsafeMutablePointer<uv_stream_t>, size: Int, 
+              buffer: UnsafePointer<uv_buf_t>) {
+        
+        data.append(buffer.pointee.base, length: size)
+        
+        buffer.pointee.base.deinitialize(count: size)
+        
         delegate.connection(self, didReadData: data)
     }
     
     public func writeData(data: Data) {
-        let writeRequest = UnsafeMutablePointer<uv_write_t>.alloc(1)
-        let pointer = UnsafeMutablePointer<Int8>(UnsafeMutablePointer<UInt8>(data.bytes))
+        
+        let writeRequest = 
+            UnsafeMutablePointer<uv_write_t>(allocatingCapacity: 1)
+        
+        let mutableBytes = UnsafeMutablePointer<UInt8>(data.bytes)
+        
+        let pointer = UnsafeMutablePointer<Int8>(mutableBytes)
+        
         var buffer = uv_buf_t(base: pointer, len: data.bytes.count)
-        writeRequest.memory.data = unsafeBitCast(callback, UnsafeMutablePointer<Void>.self)
+
+        writeRequest.pointee.data = unsafeBitCast(callback, 
+                                                  to: UnsafeMutablePointer<Void>.self)
         let stream = UnsafeMutablePointer<uv_stream_t>(client)
         uv_write(writeRequest, stream, &buffer, 1, on_client_write)
     }
     
     func close(writeRequest: UnsafeMutablePointer<uv_write_t>) {
-        writeRequest.dealloc(1)
+        writeRequest.deallocateCapacity(1)
         let handle = UnsafeMutablePointer<uv_handle_t>(client)
         uv_close(handle, on_close)
     }

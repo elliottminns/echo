@@ -34,9 +34,11 @@ extension DispatchQueue {
     }
 
     func runBlock(block: () -> (), onThread thread: inout pthread_t) {
+
         let holder = Unmanaged.passRetained(pthreadBlock(block: block))
 
-        let pointer = UnsafeMutablePointer<Void>(holder.toOpaque())
+        let pointer = unsafeBitCast(holder, 
+                                    to: UnsafeMutablePointer<Void>.self)
 
         if pthread_create(&thread, nil, pthreadRunner, pointer ) == 0 {
             pthread_detach(thread)
@@ -57,7 +59,7 @@ private class pthreadBlock {
 }
 
 private func pthreadRunner( arg: UnsafeMutablePointer<Void> ) -> UnsafeMutablePointer<Void> {
-    let unmanaged = Unmanaged<pthreadBlock>.fromOpaque( COpaquePointer( arg ) )
+    let unmanaged = Unmanaged<pthreadBlock>.fromOpaque(OpaquePointer(arg))
     unmanaged.takeUnretainedValue().block()
     unmanaged.release()
     return arg
