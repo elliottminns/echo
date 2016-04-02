@@ -1,9 +1,9 @@
 import PackageDescription
 
 #if os(Linux)
-let libuvURL = "https://github.com/elliottminns/libuv-linux"
+let libuvURL = "https://github.com/elliottminns/libuv-linux.git"
 #else
-let libuvURL = "https://github.com/elliottminns/libuv-osx"
+let libuvURL = "https://github.com/elliottminns/libuv-osx.git"
 #endif
 
 let package = Package(
