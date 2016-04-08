@@ -1,57 +1,34 @@
 import Foundation
+import CUV
 
-public class Echo {
+public class EchoLoop {
 
-    static let instance = Echo()
+    static let instance = EchoLoop()
 
     private var running = false
-
-    let mainQueue: MainQueue
-    let globalQueue: ConcurrentQueue
+    
+    var loop: UnsafeMutablePointer<uv_loop_t>
 
     private init() {
-        mainQueue = MainQueue(identifier:"com.queue.main")
-        globalQueue = ConcurrentQueue(identifier: "com.queue.global")
+        loop = uv_default_loop()
     }
 
     func begin() {
-        if !running {
-            running = true
-            #if os(Linux)
-            mainQueue.run()
-            #else
-            let resolution = 1.0;
-            var isRunning: Bool = false
-            repeat {
-                let next = NSDate(timeIntervalSinceNow: resolution)
-                let loop = NSRunLoop.main()
-
-                isRunning = loop.runMode(NSDefaultRunLoopMode, 
-                                         before: next)
-            } while (running && isRunning)
-            #endif
-
-        }
+        uv_run(loop, UV_RUN_DEFAULT)
     }
 
     func exit() {
-        if running {
-            running = false
-            #if os(Linux)
-            mainQueue.exit()
-            #endif
-        }
     }
 
     public class func begin() {
-        Echo.instance.begin()
+        EchoLoop.instance.begin()
     }
 
     public class func beginEventLoop() {
-        Echo.instance.begin()
+        EchoLoop.instance.begin()
     }
 
     public class func exit() {
-        Echo.instance.exit()
+        EchoLoop.instance.exit()
     }
 }
