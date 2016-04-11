@@ -8,15 +8,26 @@
 
 import Echo
 
+let file = "/Users/Elliott/Desktop/ss.png"
+
+FileSystem.readFile(file) { (data, error) in
+    
+}
+
+EchoLoop.begin()
+
+/*
 class Delegate: ServerDelegate {
-    func didRecieveConnection(connection: Connection) {
-        print(try? connection.data.toString())
+    
+    func server(server: Server, didRecieveConnection connection: Connection) {
+        
     }
 }
 
-let server = Server(delegate: Delegate())
-do {
-    try server.listen(3500)
-} catch {
-    
-}
+let server = Server()
+
+server.delegate = Delegate()
+
+server.listen(3600) { error in
+    print(error == nil ? "Listening on port 3500" : "error listening")
+}*/

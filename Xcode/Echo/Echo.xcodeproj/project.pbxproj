@@ -21,6 +21,9 @@
 		4F59CFF61C6E4661008D87E6 /* SerialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFF51C6E4661008D87E6 /* SerialQueue.swift */; };
 		4F59CFF81C6E466A008D87E6 /* ConcurrentQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */; };
 		4F59CFF91C6E5263008D87E6 /* Echo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F59CFC71C6E460E008D87E6 /* Echo.framework */; };
+		4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769111CBC019100EC20BF /* FileOperation.swift */; };
+		4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */; };
+		4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +73,9 @@
 		4F59CFF31C6E4659008D87E6 /* MainQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainQueue.swift; sourceTree = "<group>"; };
 		4F59CFF51C6E4661008D87E6 /* SerialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerialQueue.swift; sourceTree = "<group>"; };
 		4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrentQueue.swift; sourceTree = "<group>"; };
+		4F6769111CBC019100EC20BF /* FileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOperation.swift; sourceTree = "<group>"; };
+		4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadFileOperation.swift; sourceTree = "<group>"; };
+		4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +156,9 @@
 				4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */,
 				4F0699551C89991100ABE945 /* Server.swift */,
 				4F0699901C89BF9A0004EA41 /* Connection.swift */,
+				4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */,
+				4F6769111CBC019100EC20BF /* FileOperation.swift */,
+				4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -296,9 +305,12 @@
 				4F0699511C8998C400ABE945 /* Data.swift in Sources */,
 				4F59CFF61C6E4661008D87E6 /* SerialQueue.swift in Sources */,
 				4F59CFF41C6E4659008D87E6 /* MainQueue.swift in Sources */,
+				4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */,
 				4F59CFF81C6E466A008D87E6 /* ConcurrentQueue.swift in Sources */,
+				4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */,
 				4F0699561C89991100ABE945 /* Server.swift in Sources */,
 				4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */,
+				4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */,
 				4F59CFE71C6E4625008D87E6 /* Echo.swift in Sources */,
 				4F59CFE51C6E4625008D87E6 /* Dispatch.swift in Sources */,
 				4F59CFE61C6E4625008D87E6 /* DispatchQueue.swift in Sources */,
@@ -428,6 +440,7 @@
 		4F59CFDC1C6E460E008D87E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -438,18 +451,23 @@
 				INFOPLIST_FILE = Echo/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(SRCROOT)/../../.build/debug/",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.elliottminns.Echo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/Libuv-0.1.0";
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/uv-0.1.0/Sources/include/";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		4F59CFDD1C6E460E008D87E6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -460,12 +478,15 @@
 				INFOPLIST_FILE = Echo/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib/,
+					"$(SRCROOT)/../../.build/debug/",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.elliottminns.Echo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/Libuv-0.1.0";
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/uv-0.1.0/Sources/include/";
 			};
 			name = Release;
 		};
