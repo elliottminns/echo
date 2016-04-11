@@ -30,7 +30,7 @@ public let DISPATCH_QUEUE_PRIORITY_HIGH = 0,
     DISPATCH_QUEUE_PRIORITY_BACKGROUND = 0
 
 public func dispatch_get_global_queue( type: Int, _ flags: Int ) -> dispatch_queue_t {
-    return Echo.instance.globalQueue
+    return EchoLoop.instance.globalQueue
 }
 
 public func dispatch_sync( queue: Int, _ block: () -> () ) {
@@ -56,7 +56,7 @@ public func dispatch_after(delay: Int64, _ queue: dispatch_queue_t,
 }
 
 public func dispatch_get_main_queue() -> dispatch_queue_t {
-    return Echo.instance.mainQueue
+    return EchoLoop.instance.mainQueue
 }
 
 #endif
