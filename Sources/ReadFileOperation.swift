@@ -8,13 +8,27 @@ class ReadFileOperation {
     
     let callback: Callback
     
-    var buffer: UnsafeMutablePointer<Int8>?
+    var buffer: UnsafeMutablePointer<Int8>
+
+    var bufferSize: Int
+    
+    var data: Data
+    
+    var openFs: UnsafeMutablePointer<uv_fs_t>
     
     init(path: String, callback: Callback) {
         self.path = path
         self.callback = callback
+        self.data = Data(bytes: [])
+        let size = 1024
+        self.bufferSize = size
+        self.buffer = UnsafeMutablePointer<Int8>(allocatingCapacity: size + 40)
+        openFs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
     }
     
+    deinit {
+        print("deinint")
+    }
 }
 
 extension ReadFileOperation: FileOperation {
@@ -24,6 +38,7 @@ extension ReadFileOperation: FileOperation {
     }
     
     func fileOpened(req: UnsafeMutablePointer<uv_fs_t>) {
+        openFs = req
         readFile(req)
     }
     
@@ -32,8 +47,22 @@ extension ReadFileOperation: FileOperation {
     }
     
     func fileRead(req: UnsafeMutablePointer<uv_fs_t>) {
-        for i in 0 ..< 1024 {
-            print(buffer?.advanced(by: i).pointee)
+        
+        let size = req.pointee.result
+            
+        if size <= bufferSize {
+            data.append(buffer, length: size)
+        }
+        
+        if size != bufferSize {
+            print("closing")
+            closeFile(openFs)
+            let d = NSData(bytes: &data.bytes, length: data.bytes.count)
+            try? d.write(toFile: "/Users/Elliott/Desktop/test.png", options: .atomicWrite)
+        } else {
+            print("More to read")
+            readFile(openFs)
+            
         }
     }
     
@@ -44,42 +73,4 @@ extension ReadFileOperation: FileOperation {
     func fileOpenFailed(req: UnsafeMutablePointer<uv_fs_t>) {
         
     }
-/*
-//    extension FileOperation {
-    
-        func start() {
-            openFile(permissions: self.permissions)
-        }
-        
-        func openFile(permissions permissions: FileOpenPermissions) -> UnsafeMutablePointer<uv_fs_t> {
-            
-            let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
-            
-            fs.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
-            
-            if let cPath = path.cString(usingEncoding: NSUTF8StringEncoding) {
-                uv_fs_open(EchoLoop.instance.loop, fs, cPath, O_RDONLY, 0, fs_open_callback)
-            }
-            
-            return fs
-        }
-        
-        func readFile(fsOpen: UnsafeMutablePointer<uv_fs_t>) -> UnsafeMutablePointer<uv_fs_t> {
-            
-            let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
-            
-            fs.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
-            
-            let buffer = UnsafeMutablePointer<Int8>(allocatingCapacity: 1024)
-            uv_buf_init(buffer, 1024)
-            
-            let buf = UnsafePointer<uv_buf_t>(buffer)
-            
-            //        self.buffer = buffer
-            
-            uv_fs_read(EchoLoop.instance.loop, fs, Int32(fsOpen.pointee.result), buf, 1024, -1, fs_read_callback)
-            
-            return fs
-        }
-    }*/
 }

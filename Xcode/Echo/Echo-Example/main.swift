@@ -10,13 +10,8 @@ import Echo
 
 let file = "/Users/Elliott/Desktop/ss.png"
 
-FileSystem.readFile(file) { (data, error) in
-    
-}
 
-EchoLoop.begin()
 
-/*
 class Delegate: ServerDelegate {
     
     func server(server: Server, didRecieveConnection connection: Connection) {
@@ -30,4 +25,7 @@ server.delegate = Delegate()
 
 server.listen(3600) { error in
     print(error == nil ? "Listening on port 3500" : "error listening")
-}*/
+    FileSystem.readFile(file) { (data, error) in
+        
+    }
+}
