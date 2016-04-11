@@ -1,4 +1,5 @@
 import CUV
+import Foundation
 
 enum FileOpenPermissions {
     case Read
