@@ -50,6 +50,8 @@ final public class Connection: Hashable {
     
     public var data: Data
     
+    public var writeData: Data
+    
     let delegate: ConnectionDelegate
     
     let connection: UnsafeMutablePointer<uv_stream_t>
@@ -69,6 +71,8 @@ final public class Connection: Hashable {
         self.identifier = identifier
         
         data = Data(bytes: [])
+        
+        writeData = Data(bytes: [])
         
         self.connection = connection
         
@@ -111,19 +115,22 @@ final public class Connection: Hashable {
     
     public func writeData(data: Data) {
         
+        self.writeData = data
+        
         let writeRequest = 
             UnsafeMutablePointer<uv_write_t>(allocatingCapacity: 1)
         
-        let mutableBytes = UnsafeMutablePointer<UInt8>(data.bytes)
+        let pointer = UnsafeMutablePointer<Int8>(writeData.bytes)
         
-        let pointer = UnsafeMutablePointer<Int8>(mutableBytes)
+        let buffer = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1)
         
-        let buffer = UnsafeMutablePointer<uv_but_t>(allocatingCapacity: 1)
-        buffer.pointee = uv_buf_t(base: pointer, len: data.bytes.count)
+        buffer.pointee = uv_buf_t(base: pointer, len: writeData.bytes.count)
 
         writeRequest.pointee.data = unsafeBitCast(callback, 
                                                   to: UnsafeMutablePointer<Void>.self)
+        
         let stream = UnsafeMutablePointer<uv_stream_t>(client)
+        
         uv_write(writeRequest, stream, buffer, 1, on_client_write)
     }
     
