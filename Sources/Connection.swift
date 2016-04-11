@@ -84,7 +84,7 @@ final public class Connection: Hashable {
     }
     
     deinit {
-        client.deinitialize(count: 1)
+    //    client.deinitialize(count: 1)
     }
     
     func beginRead() throws {
@@ -108,7 +108,7 @@ final public class Connection: Hashable {
         
         data.append(buffer.pointee.base, length: size)
         
-        buffer.pointee.base.deinitialize(count: size)
+        //buffer.pointee.base.deinitialize(count: size)
         
         delegate.connection(self, didReadData: data)
     }
