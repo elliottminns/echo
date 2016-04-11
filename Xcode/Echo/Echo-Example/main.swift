@@ -10,7 +10,9 @@ import Echo
 
 let file = "/Users/Elliott/Desktop/ss.png"
 
-
+FileSystem.readFile(file) { (data, error) in
+    print(data?.bytes.count)
+}
 
 class Delegate: ServerDelegate {
     
@@ -25,7 +27,5 @@ server.delegate = Delegate()
 
 server.listen(3600) { error in
     print(error == nil ? "Listening on port 3500" : "error listening")
-    FileSystem.readFile(file) { (data, error) in
-        
-    }
+
 }

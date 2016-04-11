@@ -25,14 +25,12 @@ func fs_read_callback(req: UnsafeMutablePointer<uv_fs_t>) {
 
 func fs_close_callback(req: UnsafeMutablePointer<uv_fs_t>) {
     let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
-    if req.pointee.result >= 0 {
-        memory.fileClosed(req)
-    } else {
-        
-    }
+    memory.fileClosed(req)
 }
 
-protocol FileOperation: class {
+protocol FileOperation: class, Hashable {
+    
+    var id: Int { get set }
     
     var path: String { get }
 
@@ -54,7 +52,8 @@ protocol FileOperation: class {
 
 extension ReadFileOperation {
     
-    func start() {
+    func start(callback: Callback) {
+        self.callback = callback
         openFile(permissions: self.permissions)
     }
     
@@ -75,7 +74,7 @@ extension ReadFileOperation {
 
         fs.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
-        let buffer = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1)
+        let buffer = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1024)
         
         buffer.pointee = uv_buf_init(self.buffer, UInt32(self.bufferSize))
         

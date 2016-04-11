@@ -2,11 +2,11 @@ import CUV
 
 class ReadFileOperation {
     
-    typealias Callback = (data: Data?, error: ErrorProtocol?) -> ()
+    typealias Callback = (error: ErrorProtocol?) -> ()
     
     let path: String
     
-    let callback: Callback
+    var callback: Callback?
     
     var buffer: UnsafeMutablePointer<Int8>
 
@@ -16,11 +16,12 @@ class ReadFileOperation {
     
     var openFs: UnsafeMutablePointer<uv_fs_t>
     
-    init(path: String, callback: Callback) {
+    var id: Int = 0
+    
+    init(path: String) {
         self.path = path
-        self.callback = callback
         self.data = Data(bytes: [])
-        let size = 1024
+        let size = 16384
         self.bufferSize = size
         self.buffer = UnsafeMutablePointer<Int8>(allocatingCapacity: size + 40)
         openFs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
@@ -33,6 +34,10 @@ class ReadFileOperation {
 
 extension ReadFileOperation: FileOperation {
 
+    var hashValue: Int {
+        return id
+    }
+    
     var permissions: [FileOpenPermissions] {
         return [.Read]
     }
@@ -55,22 +60,22 @@ extension ReadFileOperation: FileOperation {
         }
         
         if size != bufferSize {
-            print("closing")
             closeFile(openFs)
-            let d = NSData(bytes: &data.bytes, length: data.bytes.count)
-            try? d.write(toFile: "/Users/Elliott/Desktop/test.png", options: .atomicWrite)
         } else {
-            print("More to read")
             readFile(openFs)
-            
         }
+        
     }
     
     func fileClosed(req: UnsafeMutablePointer<uv_fs_t>) {
-        
+        callback?(error: nil)
     }
     
     func fileOpenFailed(req: UnsafeMutablePointer<uv_fs_t>) {
         
     }
+}
+
+func ==(lhs: ReadFileOperation, rhs: ReadFileOperation) -> Bool {
+    return lhs.id == rhs.id
 }
