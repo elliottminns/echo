@@ -63,9 +63,15 @@ extension ReadFileOperation {
         let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
         
         fs.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
-        
-        if let cPath = path.cString(usingEncoding: NSUTF8StringEncoding) {
-            uv_fs_open(uv_default_loop(), fs, cPath, O_RDONLY, 0, fs_open_callback)
+ 
+#if os(Linux)
+        let cPath = path.cStringUsingEncoding(NSUTF8StringEncoding)
+#else
+        let cPath = path.cString(usingEncoding: NSUTF8StringEncoding)
+#endif
+
+        if let p = cPath {
+            uv_fs_open(uv_default_loop(), fs, p, O_RDONLY, 0, fs_open_callback)
         }
     }
     

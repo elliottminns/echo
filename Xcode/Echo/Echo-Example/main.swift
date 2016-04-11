@@ -17,7 +17,7 @@ FileSystem.readFile(file) { (data, error) in
 class Delegate: ServerDelegate {
     
     func server(server: Server, didRecieveConnection connection: Connection) {
-        
+        var x = ""
     }
 }
 
