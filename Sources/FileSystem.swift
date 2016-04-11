@@ -1,6 +1,11 @@
 
 import CUV
+
+#if os(Linux)
+import Glibc
+#else
 import Darwin
+#endif
 
 public class FileSystem {
     
