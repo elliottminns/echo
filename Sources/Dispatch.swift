@@ -58,7 +58,7 @@ public func dispatch_after(delay: Int64, _ queue: dispatch_queue_t,
 
 public func dispatch_get_main_queue() -> dispatch_queue_t {
     //return EchoLoop.instance.mainQueue
-    return SerialQueue(identifer: "hey")
+    return SerialQueue(identifier: "hey")
 }
 
 #endif
