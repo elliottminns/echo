@@ -118,12 +118,13 @@ final public class Connection: Hashable {
         
         let pointer = UnsafeMutablePointer<Int8>(mutableBytes)
         
-        var buffer = uv_buf_t(base: pointer, len: data.bytes.count)
+        let buffer = UnsafeMutablePointer<uv_but_t>(allocatingCapacity: 1)
+        buffer.pointee = uv_buf_t(base: pointer, len: data.bytes.count)
 
         writeRequest.pointee.data = unsafeBitCast(callback, 
                                                   to: UnsafeMutablePointer<Void>.self)
         let stream = UnsafeMutablePointer<uv_stream_t>(client)
-        uv_write(writeRequest, stream, &buffer, 1, on_client_write)
+        uv_write(writeRequest, stream, buffer, 1, on_client_write)
     }
     
     func close(writeRequest: UnsafeMutablePointer<uv_write_t>) {
