@@ -23,10 +23,6 @@ public class FileSystem {
         op.start { error in
             callback(data: op.data, error: error)
         }
-//        op.id = sharedInstance.current
-//        sharedInstance.current = sharedInstance.current + 1
-//        sharedInstance.operations.insert(op)
-//        
     }
     
 }
