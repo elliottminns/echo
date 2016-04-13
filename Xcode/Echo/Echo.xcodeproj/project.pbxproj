@@ -19,6 +19,9 @@
 		4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769111CBC019100EC20BF /* FileOperation.swift */; };
 		4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */; };
 		4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */; };
+		4FD909551CBF03F9003A11EB /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909541CBF03F9003A11EB /* Stream.swift */; };
+		4FD909571CBF04D7003A11EB /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909561CBF04D7003A11EB /* Handle.swift */; };
+		4FD909591CBF070F003A11EB /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909581CBF070F003A11EB /* Worker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +69,9 @@
 		4F6769111CBC019100EC20BF /* FileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOperation.swift; sourceTree = "<group>"; };
 		4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadFileOperation.swift; sourceTree = "<group>"; };
 		4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
+		4FD909541CBF03F9003A11EB /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		4FD909561CBF04D7003A11EB /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
+		4FD909581CBF070F003A11EB /* Worker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Worker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +150,9 @@
 				4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */,
 				4F6769111CBC019100EC20BF /* FileOperation.swift */,
 				4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */,
+				4FD909541CBF03F9003A11EB /* Stream.swift */,
+				4FD909561CBF04D7003A11EB /* Handle.swift */,
+				4FD909581CBF070F003A11EB /* Worker.swift */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -289,7 +298,10 @@
 			files = (
 				4F0699511C8998C400ABE945 /* Data.swift in Sources */,
 				4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */,
+				4FD909571CBF04D7003A11EB /* Handle.swift in Sources */,
 				4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */,
+				4FD909551CBF03F9003A11EB /* Stream.swift in Sources */,
+				4FD909591CBF070F003A11EB /* Worker.swift in Sources */,
 				4F0699561C89991100ABE945 /* Server.swift in Sources */,
 				4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */,
 				4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */,

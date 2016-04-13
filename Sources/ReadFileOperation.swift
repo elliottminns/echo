@@ -87,7 +87,9 @@ extension ReadFileOperation {
         
         fs.pointee.data = unsafeBitCast(self, to: UnsafeMutablePointer<Void>.self)
         
-        uv_fs_close(uv_default_loop(), fs, fs.pointee.file, fs_close_callback)
+        uv_fs_close(uv_default_loop(), fs, fs.pointee.file, nil)
+        
+        self.delegate?.operation(operation: self, didCompleteWithData: data)
     }
 }
 
@@ -127,7 +129,7 @@ extension ReadFileOperation: FileOperation {
     }
     
     func fileClosed(req: UnsafeMutablePointer<uv_fs_t>) {
-        self.delegate?.operation(operation: self, didCompleteWithData: data)
+        
     }
     
     func fileOpenFailed(req: UnsafeMutablePointer<uv_fs_t>) {
