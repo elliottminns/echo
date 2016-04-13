@@ -1,4 +1,5 @@
 import CUV
+import Foundation
 
 protocol ReadFileOperationDelegate: class {
     func operation(operation: ReadFileOperation, didCompleteWithData data: Data)

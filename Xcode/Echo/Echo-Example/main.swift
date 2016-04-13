@@ -10,14 +10,14 @@ import Echo
 
 let file = "/Users/Elliott/Desktop/ss.png"
 
-FileSystem.readFile(file) { (data, error) in
+FileSystem.readFile(atPath: file) { (data, error) in
     print(data?.bytes.count)
 }
 
 class Delegate: ServerDelegate {
     
-    func server(server: Server, didRecieveConnection connection: Connection) {
-        var x = ""
+    func server(_ server: Server, didRecieveConnection connection: Connection) {
+        _ = ""
     }
 }
 
@@ -25,7 +25,7 @@ let server = Server()
 
 server.delegate = Delegate()
 
-server.listen(3600) { error in
+server.listen(port: 3600) { error in
     print(error == nil ? "Listening on port 3500" : "error listening")
 
 }
