@@ -13,13 +13,8 @@
 		4F59CFCB1C6E460E008D87E6 /* Echo.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F59CFCA1C6E460E008D87E6 /* Echo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F59CFD21C6E460E008D87E6 /* Echo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F59CFC71C6E460E008D87E6 /* Echo.framework */; };
 		4F59CFD71C6E460E008D87E6 /* EchoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFD61C6E460E008D87E6 /* EchoTests.swift */; };
-		4F59CFE51C6E4625008D87E6 /* Dispatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFE21C6E4625008D87E6 /* Dispatch.swift */; };
-		4F59CFE61C6E4625008D87E6 /* DispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFE31C6E4625008D87E6 /* DispatchQueue.swift */; };
 		4F59CFE71C6E4625008D87E6 /* Echo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFE41C6E4625008D87E6 /* Echo.swift */; };
 		4F59CFEF1C6E462E008D87E6 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFEE1C6E462E008D87E6 /* main.swift */; };
-		4F59CFF41C6E4659008D87E6 /* MainQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFF31C6E4659008D87E6 /* MainQueue.swift */; };
-		4F59CFF61C6E4661008D87E6 /* SerialQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFF51C6E4661008D87E6 /* SerialQueue.swift */; };
-		4F59CFF81C6E466A008D87E6 /* ConcurrentQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */; };
 		4F59CFF91C6E5263008D87E6 /* Echo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F59CFC71C6E460E008D87E6 /* Echo.framework */; };
 		4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769111CBC019100EC20BF /* FileOperation.swift */; };
 		4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */; };
@@ -65,14 +60,9 @@
 		4F59CFD11C6E460E008D87E6 /* EchoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EchoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F59CFD61C6E460E008D87E6 /* EchoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EchoTests.swift; sourceTree = "<group>"; };
 		4F59CFD81C6E460E008D87E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4F59CFE21C6E4625008D87E6 /* Dispatch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dispatch.swift; sourceTree = "<group>"; };
-		4F59CFE31C6E4625008D87E6 /* DispatchQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DispatchQueue.swift; sourceTree = "<group>"; };
 		4F59CFE41C6E4625008D87E6 /* Echo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Echo.swift; sourceTree = "<group>"; };
 		4F59CFEC1C6E462E008D87E6 /* Echo-Example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Echo-Example"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F59CFEE1C6E462E008D87E6 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		4F59CFF31C6E4659008D87E6 /* MainQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainQueue.swift; sourceTree = "<group>"; };
-		4F59CFF51C6E4661008D87E6 /* SerialQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SerialQueue.swift; sourceTree = "<group>"; };
-		4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrentQueue.swift; sourceTree = "<group>"; };
 		4F6769111CBC019100EC20BF /* FileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOperation.swift; sourceTree = "<group>"; };
 		4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadFileOperation.swift; sourceTree = "<group>"; };
 		4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
@@ -148,12 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				4F06994D1C8998C400ABE945 /* Data.swift */,
-				4F59CFE21C6E4625008D87E6 /* Dispatch.swift */,
-				4F59CFE31C6E4625008D87E6 /* DispatchQueue.swift */,
 				4F59CFE41C6E4625008D87E6 /* Echo.swift */,
-				4F59CFF31C6E4659008D87E6 /* MainQueue.swift */,
-				4F59CFF51C6E4661008D87E6 /* SerialQueue.swift */,
-				4F59CFF71C6E466A008D87E6 /* ConcurrentQueue.swift */,
 				4F0699551C89991100ABE945 /* Server.swift */,
 				4F0699901C89BF9A0004EA41 /* Connection.swift */,
 				4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */,
@@ -303,17 +288,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F0699511C8998C400ABE945 /* Data.swift in Sources */,
-				4F59CFF61C6E4661008D87E6 /* SerialQueue.swift in Sources */,
-				4F59CFF41C6E4659008D87E6 /* MainQueue.swift in Sources */,
 				4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */,
-				4F59CFF81C6E466A008D87E6 /* ConcurrentQueue.swift in Sources */,
 				4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */,
 				4F0699561C89991100ABE945 /* Server.swift in Sources */,
 				4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */,
 				4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */,
 				4F59CFE71C6E4625008D87E6 /* Echo.swift in Sources */,
-				4F59CFE51C6E4625008D87E6 /* Dispatch.swift in Sources */,
-				4F59CFE61C6E4625008D87E6 /* DispatchQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

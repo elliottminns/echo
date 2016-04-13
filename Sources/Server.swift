@@ -5,14 +5,16 @@ enum ServerError: ErrorProtocol {
     case ListenError
 }
 
-internal func uv_connection_cb(request: UnsafeMutablePointer<uv_stream_t>, status: Int32) {
+typealias uv_stream = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_stream_t>>
+
+internal func uv_connection_cb_fn(request: uv_stream, status: Int32) {
     let data = request.pointee.data
     let server = unsafeBitCast(data, to: Server.self)
-    server.handleConnection(request)
+    server.handleConnection(stream: request)
 }
 
 public protocol ServerDelegate: class {
-    func server(server: Server, didRecieveConnection connection: Connection)
+    func server(_ server: Server, didRecieveConnection connection: Connection)
 }
 
 public final class Server {
@@ -52,7 +54,7 @@ public final class Server {
         
         let stream = UnsafeMutablePointer<uv_stream_t>(tcp)
         
-        let result = uv_listen(stream, 1000, uv_connection_cb)
+        let result = uv_listen(stream, 1000, uv_connection_cb_fn)
         
         guard result == 0 else {
             handler(error: ServerError.ListenError)
@@ -78,7 +80,7 @@ public final class Server {
 
 extension Server: ConnectionDelegate {
     
-    func connection(connection: Connection, didReadData data: Data) {
+    func connection(_ connection: Connection, didReadData data: Data) {
         self.delegate?.server(self, didRecieveConnection: connection)
     }
     

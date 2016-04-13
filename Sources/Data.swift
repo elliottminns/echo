@@ -24,7 +24,7 @@ public enum EncodingType {
 
 public protocol ByteType {
     static var encodingType: EncodingType { get }
-    static func fromString(string: String) -> [Self]
+    static func from(string: String) -> [Self]
 }
 
 extension UInt8: ByteType {
@@ -32,7 +32,7 @@ extension UInt8: ByteType {
         return .UTF8
     }
 
-    public static func fromString(string: String) -> [UInt8] {
+    public static func from(string: String) -> [UInt8] {
         let buf = [UInt8](string.utf8)
         return buf
     }
@@ -55,7 +55,7 @@ public struct Data {
     }
 
     public init(string: String) {
-        self.bytes = UInt8.fromString(string)
+        self.bytes = UInt8.from(string: string)
     }
 
     public func toString() throws -> String {
@@ -70,11 +70,11 @@ public struct Data {
         return str
     }
     
-    public mutating func append(bytes: [UInt8]) {
+    public mutating func append(_ bytes: [UInt8]) {
         self.bytes += bytes
     }
     
-    public mutating func append(buffer: UnsafePointer<Void>, length: Int) {
+    public mutating func append(_ buffer: UnsafePointer<Void>, length: Int) {
         let bytes = UnsafePointer<UInt8>(buffer)
         var byteArray: [UInt8] = []
         for i in stride(from: 0, to: length, by: 1) {

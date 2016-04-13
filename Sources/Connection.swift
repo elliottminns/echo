@@ -4,30 +4,33 @@ enum ConnectionError: ErrorProtocol {
     case CouldNotAccept
 }
 
-func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>, size: size_t, buffer: UnsafeMutablePointer<uv_buf_t>) {
+typealias uv_handle = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_handle_t>>
+typealias uv_buf = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_buf_t>>
+
+func alloc_buffer(handle: uv_handle, size: size_t, buffer: uv_buf) {
     let ptr = UnsafeMutablePointer<Int8>(allocatingCapacity: size)
     buffer.pointee = uv_buf_t(base: ptr, len: size)
 }
 
-func on_client_read(stream: UnsafeMutablePointer<uv_stream_t>, size: Int, buffer: UnsafePointer<uv_buf_t>) {
+func on_client_read(stream: UnsafeMutablePointer<uv_stream_t>!, size: Int, buffer: UnsafePointer<uv_buf_t>!) {
     let data = stream.pointee.data
     let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     let connection = callback.connection
-    connection?.read(stream, size: size, buffer: buffer)
+    connection?.read(stream: stream, size: size, buffer: buffer)
 }
 
-func on_client_write(writeStream: UnsafeMutablePointer<uv_write_t>, status: Int32) {
+func on_client_write(writeStream: UnsafeMutablePointer<uv_write_t>!, status: Int32) {
     let data = writeStream.pointee.data
     let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     let connection = callback.connection
-    connection?.close(writeStream)
+    connection?.close(writeRequest: writeStream)
 }
 
-func on_close(handle: UnsafeMutablePointer<uv_handle_t>) {
+func on_close(handle: uv_handle) {
     let data = handle.pointee.data
     let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     if let connection = callback.connection {
-        connection.delegate.connectionDidFinish(connection)
+        connection.delegate.connectionDidFinish(connection: connection)
     }
 }
 
@@ -38,7 +41,7 @@ class ConnectionCallback {
 }
 
 protocol ConnectionDelegate {
-    func connection(connection: Connection, didReadData data: Data)
+    func connection(_ connection: Connection, didReadData data: Data)
     func connectionDidFinish(connection: Connection)
 }
 
@@ -116,7 +119,7 @@ final public class Connection: Hashable {
         delegate.connection(self, didReadData: data)
     }
     
-    public func writeData(data: Data) {
+    public func write(data: Data) {
         
         self.writeData = data
         

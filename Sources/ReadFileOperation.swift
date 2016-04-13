@@ -44,7 +44,7 @@ extension ReadFileOperation: FileOperation {
     
     func fileOpened(req: UnsafeMutablePointer<uv_fs_t>) {
         openFs = req
-        readFile(req)
+        read(file: req)
     }
     
     func fileOpenFailed() {
@@ -60,9 +60,9 @@ extension ReadFileOperation: FileOperation {
         }
         
         if size != bufferSize {
-            closeFile(openFs)
+            close(file: openFs)
         } else {
-            readFile(openFs)
+            read(file: openFs)
         }
         
     }

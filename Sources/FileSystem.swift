@@ -19,11 +19,11 @@ public class FileSystem {
         
     }
     
-    func removeOperation(operation: ReadFileOperation) {
+    func removeOperation(_ operation: ReadFileOperation) {
         
     }
     
-    static public func readFile(path: String, callback: (data: Data?, error: ErrorProtocol?) -> ()) {
+    static public func readFile(atPath path: String, callback: (data: Data?, error: ErrorProtocol?) -> ()) {
         let op = ReadFileOperation(path: path)
         op.start { error in
             callback(data: op.data, error: error)

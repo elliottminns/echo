@@ -6,27 +6,29 @@ enum FileOpenPermissions {
     case Write
 }
 
-func fs_open_callback(req: UnsafeMutablePointer<uv_fs_t>) {
+typealias uv_fs = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_fs_t>>
+
+func fs_open_callback(req: uv_fs) {
     let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
     if req.pointee.result >= 0 {
-        memory.fileOpened(req)
+        memory.fileOpened(req: req)
     } else {
-        memory.fileOpenFailed(req)
+        memory.fileOpenFailed(req: req)
     }
 }
 
-func fs_read_callback(req: UnsafeMutablePointer<uv_fs_t>) {
+func fs_read_callback(req: uv_fs) {
     let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
     if req.pointee.result >= 0 {
-        memory.fileRead(req)
+        memory.fileRead(req: req)
     } else {
-        memory.fileRead(req)
+        memory.fileRead(req: req)
     }
 }
 
-func fs_close_callback(req: UnsafeMutablePointer<uv_fs_t>) {
+func fs_close_callback(req: uv_fs) {
     let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
-    memory.fileClosed(req)
+    memory.fileClosed(req: req)
 }
 
 protocol FileOperation: class, Hashable {
@@ -55,10 +57,10 @@ extension ReadFileOperation {
     
     func start(callback: Callback) {
         self.callback = callback
-        openFile(permissions: self.permissions)
+        open(permissions: self.permissions)
     }
     
-    func openFile(permissions permissions: [FileOpenPermissions]) {
+    func open(permissions: [FileOpenPermissions]) {
         
         let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
         
@@ -67,7 +69,7 @@ extension ReadFileOperation {
 #if os(Linux)
         let cPath = path.cStringUsingEncoding(NSUTF8StringEncoding)
 #else
-        let cPath = path.cString(usingEncoding: NSUTF8StringEncoding)
+        let cPath = path.cString(using: NSUTF8StringEncoding)
 #endif
 
         if let p = cPath {
@@ -75,7 +77,7 @@ extension ReadFileOperation {
         }
     }
     
-    func readFile(fsOpen: UnsafeMutablePointer<uv_fs_t>) {
+    func read(file fsOpen: UnsafeMutablePointer<uv_fs_t>) {
 
         let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
 
@@ -94,7 +96,7 @@ extension ReadFileOperation {
                    fs_read_callback)
     }
     
-    func closeFile(fs: UnsafeMutablePointer<uv_fs_t>) {
+    func close(file fs: UnsafeMutablePointer<uv_fs_t>) {
         
         let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
         
