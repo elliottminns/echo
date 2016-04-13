@@ -13,7 +13,7 @@ public class FileSystem {
     
     static let sharedInstance = FileSystem()
     
-    var operations: Set<ReadFileOperation> = []
+    var operations: [ReadFileOperation: (data: Data?, error: ErrorProtocol?) -> ()] = [:]
     
     init() {
         
@@ -23,11 +23,22 @@ public class FileSystem {
         
     }
     
-    static public func readFile(atPath path: String, callback: (data: Data?, error: ErrorProtocol?) -> ()) {
-        let op = ReadFileOperation(path: path)
-        op.start { error in
-            callback(data: op.data, error: error)
-        }
+    func readFile(atPath path: String, callback: (data: Data?, error: ErrorProtocol?) -> ()) {
+        let op = ReadFileOperation(identifier: current, path: path, delegate: self)
+        current += 1
+        operations[op] = callback
+        op.start()
     }
-    
+
+    static public func readFile(atPath path: String, callback: (data: Data?, error: ErrorProtocol?) -> ()) {
+        sharedInstance.readFile(atPath: path, callback: callback)
+    }
+}
+
+extension FileSystem: ReadFileOperationDelegate {
+    func operation(operation: ReadFileOperation, didCompleteWithData data: Data) {
+        let callback = operations[operation]
+        operations[operation] = nil
+        callback?(data: operation.data, error: nil)
+    }
 }

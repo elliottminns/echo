@@ -111,9 +111,6 @@ final public class Connection: Hashable {
     
     func read(stream: UnsafeMutablePointer<uv_stream_t>, size: Int, 
               buffer: UnsafePointer<uv_buf_t>) {
-        
-        print(size)
-        
         data.append(buffer.pointee.base, length: size)
         buffer.pointee.base.deallocateCapacity(size)
         delegate.connection(self, didReadData: data)
@@ -138,6 +135,7 @@ final public class Connection: Hashable {
     }
     
     func close(writeRequest: UnsafeMutablePointer<uv_write_t>) {
+        
         writeRequest.deallocateCapacity(1)
         
         let handle = UnsafeMutablePointer<uv_handle_t>(client)
