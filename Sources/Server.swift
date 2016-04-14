@@ -14,7 +14,7 @@ internal func uv_connection_cb_fn(request: uv_stream, status: Int32) {
 }
 
 public protocol ServerDelegate: class {
-    func server(_ server: Server, didRecieveConnection connection: Connection)
+    func server(_ server: Server, didRecieveConnection connection: IncomingConnection)
 }
 
 public final class Server {
@@ -25,7 +25,7 @@ public final class Server {
     
     public weak var delegate: ServerDelegate?
     
-    var connections: Set<Connection>
+    var connections: Set<IncomingConnection>
     
     var currentIdentifier: Int
     
@@ -67,7 +67,7 @@ public final class Server {
     }
     
     public func handleConnection(stream: UnsafeMutablePointer<uv_stream_t>) {
-        let connection = Connection(connection: stream, delegate: self, identifier: currentIdentifier)
+        let connection = IncomingConnection(connection: stream, delegate: self, identifier: currentIdentifier)
         currentIdentifier += 1
         connections.insert(connection)
         do {
@@ -80,11 +80,11 @@ public final class Server {
 
 extension Server: ConnectionDelegate {
     
-    func connection(_ connection: Connection, didReadData data: Data) {
+    func connection(_ connection: IncomingConnection, didReadData data: Data) {
         self.delegate?.server(self, didRecieveConnection: connection)
     }
     
-    func connectionDidFinish(connection: Connection) {
+    func connectionDidFinish(connection: IncomingConnection) {
         connections.remove(connection)
     }
 }

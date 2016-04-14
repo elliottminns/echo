@@ -4,15 +4,12 @@ enum ConnectionError: ErrorProtocol {
     case CouldNotAccept
 }
 
-typealias uv_handle = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_handle_t>>
-typealias uv_buf = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_buf_t>>
-
-func alloc_buffer(handle: uv_handle, size: size_t, buffer: uv_buf) {
+func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>!, size: size_t, buffer: UnsafeMutablePointer<uv_buf_t>!) {
     let ptr = UnsafeMutablePointer<Int8>(allocatingCapacity: size)
     buffer.pointee = uv_buf_t(base: ptr, len: size)
 }
 
-func on_client_read(stream: UnsafeMutablePointer<uv_stream_t>!, size: Int, buffer: UnsafePointer<uv_buf_t>!) {
+private func on_client_read(stream: UnsafeMutablePointer<uv_stream_t>!, size: Int, buffer: UnsafePointer<uv_buf_t>!) {
     let data = stream.pointee.data
     let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     let connection = callback.connection
@@ -26,7 +23,7 @@ func on_client_write(writeStream: UnsafeMutablePointer<uv_write_t>!, status: Int
     connection?.close(writeRequest: writeStream)
 }
 
-func on_close(handle: uv_handle) {
+func on_close(handle: UnsafeMutablePointer<uv_handle_t>!) {
     let data = handle.pointee.data
     let callback = unsafeBitCast(data, to: ConnectionCallback.self)
     if let connection = callback.connection {
@@ -36,16 +33,37 @@ func on_close(handle: uv_handle) {
 
 class ConnectionCallback {
     
-    weak var connection: Connection?
+    weak var connection: IncomingConnection?
     
 }
 
 protocol ConnectionDelegate {
-    func connection(_ connection: Connection, didReadData data: Data)
-    func connectionDidFinish(connection: Connection)
+    func connection(_ connection: IncomingConnection, didReadData data: Data)
+    func connectionDidFinish(connection: IncomingConnection)
 }
 
-final public class Connection: Hashable {
+protocol Connection {
+    
+    var client: UnsafeMutablePointer<uv_tcp_t> { get set }
+    
+    var readBuffer: Buffer { get set }
+    
+    var writeBuffer: Buffer { get set }
+    
+}
+
+extension Connection {
+    
+    func read() {
+        
+    }
+    
+    func write() {
+        
+    }
+}
+
+final public class IncomingConnection: Hashable {
     
     let identifier: Int
     
@@ -70,6 +88,7 @@ final public class Connection: Hashable {
     init(connection: UnsafeMutablePointer<uv_stream_t>, delegate: ConnectionDelegate, identifier: Int) {
         
         client = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
+        
         writeBuffer = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1)
         
         self.identifier = identifier
@@ -144,6 +163,6 @@ final public class Connection: Hashable {
     }
 }
 
-public func == (lhs: Connection, rhs: Connection) -> Bool {
+public func == (lhs: IncomingConnection, rhs: IncomingConnection) -> Bool {
     return lhs.identifier == rhs.identifier
 }

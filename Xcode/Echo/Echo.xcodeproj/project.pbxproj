@@ -18,6 +18,12 @@
 		4F59CFF91C6E5263008D87E6 /* Echo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F59CFC71C6E460E008D87E6 /* Echo.framework */; };
 		4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769111CBC019100EC20BF /* FileOperation.swift */; };
 		4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */; };
+		4FB7D1B11CC0078100E7C6FC /* URLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B01CC0078100E7C6FC /* URLRequest.swift */; };
+		4FB7D1B31CC0099E00E7C6FC /* URLConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B21CC0099E00E7C6FC /* URLConnection.swift */; };
+		4FB7D1B51CC015E000E7C6FC /* Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B41CC015E000E7C6FC /* Buffer.swift */; };
+		4FB7D1B71CC0241200E7C6FC /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B61CC0241200E7C6FC /* Write.swift */; };
+		4FB7D1B91CC0396000E7C6FC /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B81CC0396000E7C6FC /* Read.swift */; };
+		4FB7D1BB1CC0476400E7C6FC /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1BA1CC0476400E7C6FC /* Connect.swift */; };
 		4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */; };
 		4FD909551CBF03F9003A11EB /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909541CBF03F9003A11EB /* Stream.swift */; };
 		4FD909571CBF04D7003A11EB /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909561CBF04D7003A11EB /* Handle.swift */; };
@@ -68,6 +74,12 @@
 		4F59CFEE1C6E462E008D87E6 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4F6769111CBC019100EC20BF /* FileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileOperation.swift; sourceTree = "<group>"; };
 		4F6769131CBC02BC00EC20BF /* ReadFileOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReadFileOperation.swift; sourceTree = "<group>"; };
+		4FB7D1B01CC0078100E7C6FC /* URLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequest.swift; sourceTree = "<group>"; };
+		4FB7D1B21CC0099E00E7C6FC /* URLConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLConnection.swift; sourceTree = "<group>"; };
+		4FB7D1B41CC015E000E7C6FC /* Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buffer.swift; sourceTree = "<group>"; };
+		4FB7D1B61CC0241200E7C6FC /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
+		4FB7D1B81CC0396000E7C6FC /* Read.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Read.swift; sourceTree = "<group>"; };
+		4FB7D1BA1CC0476400E7C6FC /* Connect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
 		4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		4FD909541CBF03F9003A11EB /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		4FD909561CBF04D7003A11EB /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
@@ -143,6 +155,7 @@
 		4F59CFE11C6E4625008D87E6 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				4FB7D1B41CC015E000E7C6FC /* Buffer.swift */,
 				4F06994D1C8998C400ABE945 /* Data.swift */,
 				4F59CFE41C6E4625008D87E6 /* Echo.swift */,
 				4F0699551C89991100ABE945 /* Server.swift */,
@@ -153,6 +166,11 @@
 				4FD909541CBF03F9003A11EB /* Stream.swift */,
 				4FD909561CBF04D7003A11EB /* Handle.swift */,
 				4FD909581CBF070F003A11EB /* Worker.swift */,
+				4FB7D1B01CC0078100E7C6FC /* URLRequest.swift */,
+				4FB7D1B21CC0099E00E7C6FC /* URLConnection.swift */,
+				4FB7D1B61CC0241200E7C6FC /* Write.swift */,
+				4FB7D1B81CC0396000E7C6FC /* Read.swift */,
+				4FB7D1BA1CC0476400E7C6FC /* Connect.swift */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -296,15 +314,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4FB7D1B71CC0241200E7C6FC /* Write.swift in Sources */,
 				4F0699511C8998C400ABE945 /* Data.swift in Sources */,
+				4FB7D1BB1CC0476400E7C6FC /* Connect.swift in Sources */,
+				4FB7D1B31CC0099E00E7C6FC /* URLConnection.swift in Sources */,
+				4FB7D1B11CC0078100E7C6FC /* URLRequest.swift in Sources */,
 				4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */,
 				4FD909571CBF04D7003A11EB /* Handle.swift in Sources */,
 				4F6769121CBC019100EC20BF /* FileOperation.swift in Sources */,
 				4FD909551CBF03F9003A11EB /* Stream.swift in Sources */,
 				4FD909591CBF070F003A11EB /* Worker.swift in Sources */,
+				4FB7D1B51CC015E000E7C6FC /* Buffer.swift in Sources */,
 				4F0699561C89991100ABE945 /* Server.swift in Sources */,
 				4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */,
 				4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */,
+				4FB7D1B91CC0396000E7C6FC /* Read.swift in Sources */,
 				4F59CFE71C6E4625008D87E6 /* Echo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

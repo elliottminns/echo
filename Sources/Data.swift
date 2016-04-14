@@ -47,7 +47,7 @@ public struct Data {
     public var bytes: [UInt8]
 
     public var size: Int {
-        return self.bytes.count * sizeof(UInt8)
+        return self.bytes.count
     }
 
     public init(bytes: [UInt8]) {
