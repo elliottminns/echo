@@ -92,8 +92,17 @@ public class URLConnection {
     
     func resolveDNS() {
         hints.pointee.ai_family = PF_INET
-        hints.pointee.ai_socktype = Int32(SOCK_STREAM)
-        hints.pointee.ai_protocol = Int32(IPPROTO_TCP)
+        let socktype: Int32
+        let aiprotocol: Int32
+        #if os(Linux)
+            socktype = Int32(SOCK_STREAM.rawValue)
+            aiprotocol = Int32(IPPROTO_TCP.rawValue)
+        #else
+            socktype = Int32(SOCK_STREAM)
+            aiprotocol = Int32(IPPROTO_TCP)
+        #endif
+        hints.pointee.ai_socktype = socktype
+        hints.pointee.ai_protocol = aiprotocol
         hints.pointee.ai_flags = 0
         let loop = EchoLoop.instance.loop
     
