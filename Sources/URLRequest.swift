@@ -93,7 +93,7 @@ public struct URLRequest {
         return self.host.components(separatedBy: "://").last ?? host
     }
     
-    mutating func add(header: String, value: String) {
+    public mutating func add(header: String, value: String) {
         headers[header] = value
     }
     
