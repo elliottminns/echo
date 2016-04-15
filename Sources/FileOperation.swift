@@ -6,8 +6,6 @@ enum FileOpenPermissions {
     case Write
 }
 
-typealias uv_fs = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_fs_t>>
-
 typealias fs_callback = (req: UnsafeMutablePointer<uv_fs_t>!) -> ()
 
 class FsCallback {
@@ -21,6 +19,7 @@ private func fs_cb(req: UnsafeMutablePointer<uv_fs_t>!) {
     guard let opaque = OpaquePointer(req.pointee.data) else { return }
     let holder = Unmanaged<FsCallback>.fromOpaque(opaque)
     holder.takeUnretainedValue().callback(req: req)
+    holder.release()
 }
 
 extension io {
@@ -59,29 +58,6 @@ extension io {
         
         uv_fs_read(loop, req, file, bufs, nbufs, offset, fs_cb)
     }
-}
-
-func fs_open_callback(req: uv_fs) {
-    let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
-    if req.pointee.result >= 0 {
-        memory.fileOpened(req: req)
-    } else {
-        memory.fileOpenFailed(req: req)
-    }
-}
-
-func fs_read_callback(req: uv_fs) {
-    let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
-    if req.pointee.result >= 0 {
-        memory.fileRead(req: req)
-    } else {
-        memory.fileRead(req: req)
-    }
-}
-
-func fs_close_callback(req: uv_fs) {
-    let memory = unsafeBitCast(req.pointee.data, to: ReadFileOperation.self)
-    memory.fileClosed(req: req)
 }
 
 protocol FileOperation: class, Hashable {

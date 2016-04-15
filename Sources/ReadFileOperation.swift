@@ -1,8 +1,8 @@
 import CUV
 import Foundation
 
-protocol ReadFileOperationDelegate: class {
-    func operation(operation: ReadFileOperation, didCompleteWithData data: Data)
+enum FileSystemError: ErrorProtocol {
+    case CouldNotOpenFile
 }
 
 class ReadFileOperation {
@@ -21,17 +21,16 @@ class ReadFileOperation {
     
     var identifier: Int = 0
 
-    weak var delegate: ReadFileOperationDelegate?
+    var callback: ((data: Data?, error: ErrorProtocol?) -> ())?
 
-    init(identifier: Int, path: String, delegate: ReadFileOperationDelegate) {
+    init(identifier: Int, path: String) {
         self.identifier = identifier
         self.path = path
         self.data = Data(bytes: [])
-        self.numBufs = 32
-        self.bufferSize = 262144
+        self.numBufs = 1
+        self.bufferSize = 16386
         self.buf = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: Int(numBufs))
         self.openedFile = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
-        self.delegate = delegate
         loadBuffers()
     }
     
@@ -54,14 +53,15 @@ class ReadFileOperation {
 
 extension ReadFileOperation {
     
-    func start() {
+    func start(callback: (data: Data?, error: ErrorProtocol?) -> ()) {
+        self.callback = callback
         open(permissions: self.permissions)
     }
     
     func open(permissions: [FileOpenPermissions]) {
         
         let fs = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
-        
+            
         io.fs_open(uv_default_loop(), fs, path, O_RDONLY, 0) { (req) in
             self.openedFile = fs
             self.read(file: req)
@@ -79,13 +79,16 @@ extension ReadFileOperation {
     
     func close(file fs: UnsafeMutablePointer<uv_fs_t>) {
         
-        uv_fs_close(uv_default_loop(), fs, fs.pointee.file, nil)
+        let req = UnsafeMutablePointer<uv_fs_t>(allocatingCapacity: 1)
+        uv_fs_close(uv_default_loop(), req, Int32(fs.pointee.result), nil)
+        req.deallocateCapacity(1)
         
-        self.delegate?.operation(operation: self, didCompleteWithData: data)
+        callback?(data: data, error: nil)
+        callback = nil
     }
 }
 
-extension ReadFileOperation: FileOperation {
+extension ReadFileOperation: Hashable {
 
     var hashValue: Int {
         return identifier
@@ -101,7 +104,8 @@ extension ReadFileOperation: FileOperation {
     }
     
     func fileOpenFailed() {
-        
+        callback?(data: nil, error: FileSystemError.CouldNotOpenFile)
+        callback = nil
     }
     
     func fileRead(req: UnsafeMutablePointer<uv_fs_t>) {
@@ -123,21 +127,14 @@ extension ReadFileOperation: FileOperation {
             buffersRead += 1
         }
         
-        if buffersRead < numBufs && size % bufferSize != 0 {
+        if buffersRead < numBufs || size % bufferSize != 0 {
             close(file: openedFile)
         } else {
             read(file: openedFile)
         }
         
     }
-    
-    func fileClosed(req: UnsafeMutablePointer<uv_fs_t>) {
-        
-    }
-    
-    func fileOpenFailed(req: UnsafeMutablePointer<uv_fs_t>) {
-        
-    }
+
 }
 
 func ==(lhs: ReadFileOperation, rhs: ReadFileOperation) -> Bool {
