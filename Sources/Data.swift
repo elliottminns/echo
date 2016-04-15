@@ -84,6 +84,7 @@ public struct Data {
     }
     
     public mutating func append(_ buffer: UnsafePointer<Void>, length: Int) {
+        guard length > 0 else { return } 
         let bytes = UnsafePointer<UInt8>(buffer)
         let buf = UnsafeBufferPointer(start: bytes, count: length)
         self.bytes.append(contentsOf: buf)
