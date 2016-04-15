@@ -28,11 +28,18 @@ public enum RequestMethod {
     }
 }
 
+public enum EncodingType {
+    case Form
+    case JSON
+}
+
 public struct URLRequest {
     
     var headers: [String: String]
     
     public var method: RequestMethod
+    
+    public var encodingType: EncodingType
     
     public var body: Data
     
@@ -55,10 +62,18 @@ public struct URLRequest {
     }
 
     public init(host: String, path: String, port: Int, method: RequestMethod) {
+        self.init(host: host, path: path, port: port, method: method,
+                  encodingType: .Form)
+    }
+    
+    public init(host: String, path: String, port: Int, method: RequestMethod,
+                encodingType: EncodingType) {
         self.host = host
         self.path = path
         self.port = port
         self.method = method
+        self.encodingType = encodingType
+        
         self.headers = {
             let hostHeader: String = {
                 var header = host
@@ -103,6 +118,15 @@ public struct URLRequest {
         
         if (body.size > 0) {
             string += "Content-Length: \(body.size)"
+        }
+        
+        if method == .POST {
+            switch encodingType {
+            case .Form:
+                    string += "Content-Type: application/x-www-form-urlencoded\r\n"
+            case .JSON:
+                    string += "Content-Type: application/json\r\n"
+            }
         }
         
         string += "\r\n"

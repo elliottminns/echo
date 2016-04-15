@@ -1,6 +1,6 @@
 import Foundation
 
-public enum EncodingType {
+public enum StringEncodingType {
     case UTF8
 
     var typeForEncoding: Any.Type {
@@ -23,12 +23,12 @@ public enum EncodingType {
 }
 
 public protocol ByteType {
-    static var encodingType: EncodingType { get }
+    static var encodingType: StringEncodingType { get }
     static func from(string: String) -> [Self]
 }
 
 extension UInt8: ByteType {
-    public static var encodingType: EncodingType {
+    public static var encodingType: StringEncodingType {
         return .UTF8
     }
 
