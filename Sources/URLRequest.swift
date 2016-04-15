@@ -99,7 +99,7 @@ public struct URLRequest {
     
     func data() -> Data {
         var headers = self.headers
-        var string = "GET \(path) HTTP/1.1\r\n"
+        var string = "\(method.stringValue) \(path) HTTP/1.1\r\n"
         
         if let host = headers["Host"] {
             headers["Host"] = nil
@@ -133,6 +133,8 @@ public struct URLRequest {
         
         var data = Data(string: string)
         data.append(body.bytes)
+        
+        print(string)
         
         return data
     }
