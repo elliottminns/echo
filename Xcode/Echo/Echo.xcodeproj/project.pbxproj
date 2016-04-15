@@ -26,6 +26,7 @@
 		4FB7D1BB1CC0476400E7C6FC /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1BA1CC0476400E7C6FC /* Connect.swift */; };
 		4FCA259D1CC0708600B9ACE7 /* HTTPParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA259C1CC0708600B9ACE7 /* HTTPParser.swift */; };
 		4FCA259F1CC070A200B9ACE7 /* URLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA259E1CC070A200B9ACE7 /* URLResponse.swift */; };
+		4FCA25A11CC10EE200B9ACE7 /* LinuxFixes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA25A01CC10EE200B9ACE7 /* LinuxFixes.swift */; };
 		4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */; };
 		4FD909551CBF03F9003A11EB /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909541CBF03F9003A11EB /* Stream.swift */; };
 		4FD909571CBF04D7003A11EB /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909561CBF04D7003A11EB /* Handle.swift */; };
@@ -84,6 +85,7 @@
 		4FB7D1BA1CC0476400E7C6FC /* Connect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
 		4FCA259C1CC0708600B9ACE7 /* HTTPParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPParser.swift; sourceTree = "<group>"; };
 		4FCA259E1CC070A200B9ACE7 /* URLResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLResponse.swift; sourceTree = "<group>"; };
+		4FCA25A01CC10EE200B9ACE7 /* LinuxFixes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinuxFixes.swift; sourceTree = "<group>"; };
 		4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		4FD909541CBF03F9003A11EB /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		4FD909561CBF04D7003A11EB /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				4FB7D1BA1CC0476400E7C6FC /* Connect.swift */,
 				4FCA259C1CC0708600B9ACE7 /* HTTPParser.swift */,
 				4FCA259E1CC070A200B9ACE7 /* URLResponse.swift */,
+				4FCA25A01CC10EE200B9ACE7 /* LinuxFixes.swift */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -323,6 +326,7 @@
 				4FB7D1B71CC0241200E7C6FC /* Write.swift in Sources */,
 				4F0699511C8998C400ABE945 /* Data.swift in Sources */,
 				4FB7D1BB1CC0476400E7C6FC /* Connect.swift in Sources */,
+				4FCA25A11CC10EE200B9ACE7 /* LinuxFixes.swift in Sources */,
 				4FB7D1B31CC0099E00E7C6FC /* URLConnection.swift in Sources */,
 				4FB7D1B11CC0078100E7C6FC /* URLRequest.swift in Sources */,
 				4F6769141CBC02BC00EC20BF /* ReadFileOperation.swift in Sources */,
