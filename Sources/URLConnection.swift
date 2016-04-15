@@ -141,8 +141,6 @@ class URLConnection {
             let stream = handle.pointee.handle
             
             io.write(writer, stream, buffer.raw, 1) { handle, size in
-                print("written")
-                print(try? self.request.data().toString())
             }
             
             io.read_start(stream, alloc_buffer) { stream, size, buffer in
