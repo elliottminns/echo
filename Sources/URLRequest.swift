@@ -117,7 +117,7 @@ public struct URLRequest {
         }
         
         if (body.size > 0) {
-            string += "Content-Length: \(body.size)"
+            string += "Content-Length: \(body.size)\r\n"
         }
         
         if method == .POST {
@@ -133,8 +133,6 @@ public struct URLRequest {
         
         var data = Data(string: string)
         data.append(body.bytes)
-        
-        print(string)
         
         return data
     }
