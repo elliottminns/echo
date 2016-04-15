@@ -75,11 +75,7 @@ public struct URLRequest {
     }
     
     public func strippedHost() -> String {
-        #if os(Linux)
-            return self.host.componentsSeparatedBy("://").last ?? host
-        #else
-            return self.host.components(separatedBy: "://").last ?? host
-        #endif
+        return self.host.components(separatedBy: "://").last ?? host
     }
     
     mutating func add(header: String, value: String) {
