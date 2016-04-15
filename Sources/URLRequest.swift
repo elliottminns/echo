@@ -42,23 +42,36 @@ public struct URLRequest {
     
     public let path: String
     
-    public init(host: String, path: String, port: Int = 80) {
+    public init(host: String, path: String, method: RequestMethod) {
+        self.init(host: host, path: path, port: 80, method: method)
+    }
+    
+    public init(host: String, path: String) {
+        self.init(host: host, path: path, port: 80, method: .GET)
+    }
+    
+    public init(host: String, path: String, port: Int) {
+        self.init(host: host, path: path, port: port, method: .GET)
+    }
+
+    public init(host: String, path: String, port: Int, method: RequestMethod) {
         self.host = host
-        self.port = port
-        
-        method = .GET
-        let hostHeader: String = {
-            var header = host
-            if port != 80 {
-                header += ":\(port)"
-            }
-            return header
-        }()
-        headers = ["Host": hostHeader,
-            "User-Agent": "Echo/0.7.0",
-            "Accept": "*/*"]
-        body = Data(bytes: [])
         self.path = path
+        self.port = port
+        self.method = method
+        self.headers = {
+            let hostHeader: String = {
+                var header = host
+                if port != 80 {
+                    header += ":\(port)"
+                }
+                return header
+            }()
+            return ["Host": hostHeader,
+                    "User-Agent": "Echo/0.7.0",
+                    "Accept": "*/*"]
+        }()
+        body = Data(bytes: [])
     }
     
     public func strippedHost() -> String {

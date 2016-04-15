@@ -49,6 +49,10 @@ public struct Data {
     public var size: Int {
         return self.bytes.count
     }
+    
+    init() {
+        self.bytes = []
+    }
 
     public init(bytes: [UInt8]) {
         self.bytes = bytes
@@ -56,6 +60,11 @@ public struct Data {
 
     public init(string: String) {
         self.bytes = UInt8.from(string: string)
+    }
+    
+    public init(base: UnsafeMutablePointer<Int8>, length: Int) {
+        let ubase = UnsafeMutablePointer<UInt8>(base)
+        self.bytes = Array(UnsafeBufferPointer(start: ubase, count: length))
     }
 
     public func toString() throws -> String {
@@ -76,10 +85,7 @@ public struct Data {
     
     public mutating func append(_ buffer: UnsafePointer<Void>, length: Int) {
         let bytes = UnsafePointer<UInt8>(buffer)
-        var byteArray: [UInt8] = []
-        for i in stride(from: 0, to: length, by: 1) {
-            byteArray.append(bytes[i])
-        }
-        self.append(byteArray)
+        let buf = UnsafeBufferPointer(start: bytes, count: length)
+        self.bytes.append(contentsOf: buf)
     }
 }

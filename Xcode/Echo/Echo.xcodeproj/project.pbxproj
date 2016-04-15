@@ -24,6 +24,8 @@
 		4FB7D1B71CC0241200E7C6FC /* Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B61CC0241200E7C6FC /* Write.swift */; };
 		4FB7D1B91CC0396000E7C6FC /* Read.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1B81CC0396000E7C6FC /* Read.swift */; };
 		4FB7D1BB1CC0476400E7C6FC /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FB7D1BA1CC0476400E7C6FC /* Connect.swift */; };
+		4FCA259D1CC0708600B9ACE7 /* HTTPParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA259C1CC0708600B9ACE7 /* HTTPParser.swift */; };
+		4FCA259F1CC070A200B9ACE7 /* URLResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA259E1CC070A200B9ACE7 /* URLResponse.swift */; };
 		4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */; };
 		4FD909551CBF03F9003A11EB /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909541CBF03F9003A11EB /* Stream.swift */; };
 		4FD909571CBF04D7003A11EB /* Handle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD909561CBF04D7003A11EB /* Handle.swift */; };
@@ -80,6 +82,8 @@
 		4FB7D1B61CC0241200E7C6FC /* Write.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Write.swift; sourceTree = "<group>"; };
 		4FB7D1B81CC0396000E7C6FC /* Read.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Read.swift; sourceTree = "<group>"; };
 		4FB7D1BA1CC0476400E7C6FC /* Connect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
+		4FCA259C1CC0708600B9ACE7 /* HTTPParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPParser.swift; sourceTree = "<group>"; };
+		4FCA259E1CC070A200B9ACE7 /* URLResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLResponse.swift; sourceTree = "<group>"; };
 		4FCA3E851CBBEB95002DAD7E /* FileSystem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystem.swift; sourceTree = "<group>"; };
 		4FD909541CBF03F9003A11EB /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		4FD909561CBF04D7003A11EB /* Handle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Handle.swift; sourceTree = "<group>"; };
@@ -171,6 +175,8 @@
 				4FB7D1B61CC0241200E7C6FC /* Write.swift */,
 				4FB7D1B81CC0396000E7C6FC /* Read.swift */,
 				4FB7D1BA1CC0476400E7C6FC /* Connect.swift */,
+				4FCA259C1CC0708600B9ACE7 /* HTTPParser.swift */,
+				4FCA259E1CC070A200B9ACE7 /* URLResponse.swift */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -327,6 +333,8 @@
 				4FB7D1B51CC015E000E7C6FC /* Buffer.swift in Sources */,
 				4F0699561C89991100ABE945 /* Server.swift in Sources */,
 				4F0699911C89BF9A0004EA41 /* Connection.swift in Sources */,
+				4FCA259D1CC0708600B9ACE7 /* HTTPParser.swift in Sources */,
+				4FCA259F1CC070A200B9ACE7 /* URLResponse.swift in Sources */,
 				4FCA3E861CBBEB95002DAD7E /* FileSystem.swift in Sources */,
 				4FB7D1B91CC0396000E7C6FC /* Read.swift in Sources */,
 				4F59CFE71C6E4625008D87E6 /* Echo.swift in Sources */,
@@ -475,7 +483,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.elliottminns.Echo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/uv-0.1.0/Sources/include/";
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/uv-0.2.0/Sources/include/ $(SRCROOT)/../../Packages/http-parser-0.1.0/Sources/include/";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -502,7 +510,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.elliottminns.Echo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/uv-0.1.0/Sources/include/";
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/../../Packages/uv-0.2.0/Sources/include/ $(SRCROOT)/../../Packages/http-parser-0.1.0/Sources/include/";
 			};
 			name = Release;
 		};
@@ -531,7 +539,7 @@
 		4F59CFF11C6E462E008D87E6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../.build/debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -539,7 +547,7 @@
 		4F59CFF21C6E462E008D87E6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = /usr/local/lib/;
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../.build/debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

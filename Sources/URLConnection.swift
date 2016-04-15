@@ -8,6 +8,7 @@
 
 import Foundation
 import CUV
+import CHttpParser
 
 enum URLConnectionError: ErrorProtocol {
     case ConnectionFailed
@@ -39,11 +40,13 @@ public class URLConnection {
     let request: URLRequest
     let buffer: Buffer
     var readData: Data
-    var callback: ((error: ErrorProtocol?) -> ())?
+    var callback: ((response: URLResponse?, error: ErrorProtocol?) -> ())?
     var connection: Connection?
     let hints: UnsafeMutablePointer<addrinfo>
     let resolver: UnsafeMutablePointer<uv_getaddrinfo_t>
     let resolvedIP: UnsafeMutablePointer<Int8>
+    var stream: UnsafeMutablePointer<uv_stream_t>?
+    let parser: HTTPParser
     
     public init(request: URLRequest) {
         socket = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
@@ -55,7 +58,9 @@ public class URLConnection {
         hints = UnsafeMutablePointer<addrinfo>(allocatingCapacity: 1)
         resolver = UnsafeMutablePointer<uv_getaddrinfo_t>(allocatingCapacity: 1)
         resolvedIP = UnsafeMutablePointer<Int8>(allocatingCapacity: 17)
+        parser = HTTPParser()
         self.request = request
+        parser.delegate = self
     }
     
     deinit {
@@ -67,7 +72,7 @@ public class URLConnection {
         resolvedIP.deallocateCapacity(17)
     }
     
-    public func perform(callback: (error: ErrorProtocol?) -> ()) {
+    public func perform(callback: (response: URLResponse?, error: ErrorProtocol?) -> ()) {
         
         self.callback = callback
         
@@ -77,8 +82,6 @@ public class URLConnection {
     }
     
     func connect(addr: UnsafeMutablePointer<sockaddr_in>) {
-        
-//
         
         let add = UnsafeMutablePointer<sockaddr>(addr)
         
@@ -135,18 +138,54 @@ public class URLConnection {
             }
             
         } else {
-            callback?(error: URLConnectionError.ConnectionFailed)
+            callback?(response: nil, error: URLConnectionError.ConnectionFailed)
         }
     }
     
     func read(stream: UnsafeMutablePointer<uv_stream_t>!, size: Int, buffer: UnsafePointer<uv_buf_t>!) {
+        
         readData.append(buffer.pointee.base, length: size)
-        buffer.pointee.base.deallocateCapacity(size)
+        
+        self.stream = stream
         
         if (size < 0) {
-            print(try? readData.toString())
-            uv_close(UnsafeMutablePointer<uv_handle_t>(stream), nil)
+            
+            completed()
+            
+        } else {
+            
+            var data = Data(bytes: [])
+            
+            data.append(buffer.pointee.base, length: size)
+            
+            do {
+                
+                try parser.exectue(data: data)
+                
+            } catch  {
+
+                uv_close(UnsafeMutablePointer<uv_handle_t>(self.stream), nil)
+                callback?(response: nil, error: error)
+            }
         }
+        
+        buffer.pointee.base.deallocateCapacity(size)
     }
     
+    func completed() {
+        
+        uv_close(UnsafeMutablePointer<uv_handle_t>(self.stream), nil)
+        
+        let response = parser.response
+        
+        callback?(response: response, error: nil)
+        
+    }
+    
+}
+
+extension URLConnection: HTTPParserDelegate {
+    func parser(_ parser: HTTPParser, didParseResponse response: URLResponse) {
+        completed()
+    }
 }
