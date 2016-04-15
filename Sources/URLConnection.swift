@@ -91,10 +91,10 @@ public class URLConnection {
     }
     
     func resolveDNS() {
-        hints.pointee.ai_family = PF_INET;
-        hints.pointee.ai_socktype = SOCK_STREAM;
-        hints.pointee.ai_protocol = IPPROTO_TCP;
-        hints.pointee.ai_flags = 0;
+        hints.pointee.ai_family = PF_INET
+        hints.pointee.ai_socktype = Int32(SOCK_STREAM)
+        hints.pointee.ai_protocol = Int32(IPPROTO_TCP)
+        hints.pointee.ai_flags = 0
         let loop = EchoLoop.instance.loop
     
         let unmanaged = Unmanaged.passRetained(self)
