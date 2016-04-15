@@ -31,7 +31,7 @@ private func on_resolved(resolver: UnsafeMutablePointer<uv_getaddrinfo_t>!,
     holder.release()
 }
 
-public class URLConnection {
+class URLConnection {
     
     let socket: UnsafeMutablePointer<uv_tcp_t>
     let connect: UnsafeMutablePointer<uv_connect_t>
@@ -48,7 +48,9 @@ public class URLConnection {
     var stream: UnsafeMutablePointer<uv_stream_t>?
     let parser: HTTPParser
     
-    public init(request: URLRequest) {
+    var identifier: Int = 0
+    
+    init(request: URLRequest) {
         socket = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
         connect = UnsafeMutablePointer<uv_connect_t>(allocatingCapacity: 1)
         addr = UnsafeMutablePointer<sockaddr_in>(allocatingCapacity: 1)
@@ -69,10 +71,11 @@ public class URLConnection {
         addr.deallocateCapacity(1)
         writer.deallocateCapacity(1)
         hints.deallocateCapacity(1)
+        resolver.deallocateCapacity(1)
         resolvedIP.deallocateCapacity(17)
     }
     
-    public func perform(callback: (response: URLResponse?, error: ErrorProtocol?) -> ()) {
+    func perform(callback: (response: URLResponse?, error: ErrorProtocol?) -> ()) {
         
         self.callback = callback
         
@@ -172,9 +175,11 @@ public class URLConnection {
                 try parser.exectue(data: data)
                 
             } catch  {
-
-                uv_close(UnsafeMutablePointer<uv_handle_t>(self.stream), nil)
-                callback?(response: nil, error: error)
+                io.close(UnsafeMutablePointer<uv_handle_t>(self.stream), { (handle) in
+                    self.callback?(response: nil, error: error)
+                })
+                
+                //ConnectionsStore.defaultStore.remove(connection: self)
             }
         }
         
@@ -188,7 +193,7 @@ public class URLConnection {
         let response = parser.response
         
         callback?(response: response, error: nil)
-        
+//        ConnectionsStore.defaultStore.remove(connection: self)
     }
     
 }
@@ -197,4 +202,14 @@ extension URLConnection: HTTPParserDelegate {
     func parser(_ parser: HTTPParser, didParseResponse response: URLResponse) {
         completed()
     }
+}
+
+extension URLConnection: Hashable {
+    var hashValue: Int {
+        return self.identifier
+    }
+}
+
+func ==(lhs: URLConnection, rhs: URLConnection) -> Bool {
+    return lhs.identifier == rhs.identifier
 }
