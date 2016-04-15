@@ -95,9 +95,6 @@ public struct URLRequest {
     
     public mutating func add(header: String, value: String) {
         headers[header] = value
-        
-        let vars: [String] = ["j", "j"]
-        vars.joined(separator: <#T##String#>)
     }
     
     func data() -> Data {
