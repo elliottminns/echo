@@ -96,7 +96,7 @@ public class URLConnection {
         let aiprotocol: Int32
         #if os(Linux)
             socktype = Int32(SOCK_STREAM.rawValue)
-            aiprotocol = Int32(IPPROTO_TCP.rawValue)
+            aiprotocol = Int32(IPPROTO_TCP)
         #else
             socktype = Int32(SOCK_STREAM)
             aiprotocol = Int32(IPPROTO_TCP)
