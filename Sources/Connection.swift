@@ -1,167 +1,81 @@
-import CUV
+//
+//  Connection.swift
+//  Echo
+//
+//  Created by Elliott Minns on 14/05/2016.
+//  Copyright © 2016 Elliott Minns. All rights reserved.
+//
 
-enum ConnectionError: ErrorProtocol {
-    case CouldNotAccept
-}
+import Foundation
 
-func alloc_buffer(handle: UnsafeMutablePointer<uv_handle_t>!, size: size_t, buffer: UnsafeMutablePointer<uv_buf_t>!) {
-    let ptr = UnsafeMutablePointer<Int8>(allocatingCapacity: size)
-    buffer.pointee = uv_buf_t(base: ptr, len: size)
-}
-
-//private func on_client_read(stream: UnsafeMutablePointer<uv_stream_t>!, size: Int, buffer: UnsafePointer<uv_buf_t>!) {
-//    let data = stream.pointee.data
-//    let callback = unsafeBitCast(data, to: ConnectionCallback.self)
-//    let connection = callback.connection
-//    connection?.read(stream: stream, size: size, buffer: buffer)
-//}
-
-//func on_close(handle: UnsafeMutablePointer<uv_handle_t>!) {
-//    let data = handle.pointee.data
-//    let callback = unsafeBitCast(data, to: ConnectionCallback.self)
-//    if let connection = callback.connection {
-//        connection.delegate.connectionDidFinish(connection: connection)
-//    }
-//}
-
-class ConnectionCallback {
+public class Connection {
     
-    weak var connection: IncomingConnection?
+    let socket: Socket
     
-}
-
-protocol ConnectionDelegate {
-    func connection(_ connection: IncomingConnection, didReadData data: Data)
-    func connectionDidFinish(connection: IncomingConnection)
-}
-
-protocol Connection {
+    let readBuffer: Buffer
     
-    var client: UnsafeMutablePointer<uv_tcp_t> { get set }
+    var writeBuffer: Buffer
     
-    var readBuffer: Buffer { get set }
-    
-    var writeBuffer: Buffer { get set }
-    
-}
-
-extension Connection {
-    
-    func read() {
-        
+    init(socket: Socket) {
+        self.socket = socket
+        self.readBuffer = Buffer(size: 1024)
+        self.writeBuffer = Buffer(size: 1024)
+        setup()
     }
     
-    func write() {
-        
+    func setup() {
     }
-}
 
-final public class IncomingConnection: Hashable {
-    
-    let identifier: Int
-    
-    var client: UnsafeMutablePointer<uv_tcp_t>
-    
-    public var data: Data
-    
-    public var writeData: Data
-    
-    let delegate: ConnectionDelegate
-    
-    let connection: UnsafeMutablePointer<uv_stream_t>
-    
-    var writeBuffer: UnsafeMutablePointer<uv_buf_t>
-    
-    var callback: ConnectionCallback
-    
-    public var hashValue: Int {
-        return identifier
-    }
-    
-    init(connection: UnsafeMutablePointer<uv_stream_t>, delegate: ConnectionDelegate, identifier: Int) {
+    func read(callback: (data: Buffer) -> ()) {
         
-        client = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
+        let readSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
+                                                UInt(socket.raw),
+                                                0,
+                                                dispatch_get_main_queue())
         
-        writeBuffer = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1)
-        
-        self.identifier = identifier
-        
-        data = Data(bytes: [])
-        
-        writeData = Data(bytes: [])
-        
-        self.connection = connection
-        
-        self.delegate = delegate
-        
-        callback = ConnectionCallback()
-        
-        callback.connection = self
-        
-    }
-    
-    deinit {
-        client.deallocateCapacity(1)
-        writeBuffer.deallocateCapacity(1)
-    }
-    
-    func beginRead() throws {
-        client.pointee.data = unsafeBitCast(callback, 
-                                           to: UnsafeMutablePointer<Void>.self)
-
-        uv_tcp_init(uv_default_loop(), client)
-        
-        let stream = UnsafeMutablePointer<uv_stream_t>(client)
-        
-        guard uv_accept(self.connection, stream) == 0 else {
-            uv_close(UnsafeMutablePointer<uv_handle_t>(stream), nil)
-            throw ConnectionError.CouldNotAccept
+        dispatch_source_set_event_handler(readSource) {
+            
+            let amount = Darwin.read(self.socket.raw, self.readBuffer.buffer,
+                                     self.readBuffer.size)
+            if amount < 0 {
+                print("Error with reading")
+                dispatch_source_cancel(readSource)
+            } else if amount == 0 {
+                print("Amount was 0")
+                callback(data: self.readBuffer)
+                dispatch_source_cancel(readSource)
+            } else {
+                callback(data: self.readBuffer)
+                dispatch_source_cancel(readSource)
+            }
         }
         
-        io.read_start(stream, alloc_buffer) { (stream, size, buffer) in
-            self.read(stream: stream, size: size, buffer: buffer)
-        }
+        dispatch_resume(readSource)
+        
     }
     
-    func read(stream: UnsafeMutablePointer<uv_stream_t>, size: Int, 
-              buffer: UnsafePointer<uv_buf_t>) {
-        data.append(buffer.pointee.base, length: size)
-        buffer.pointee.base.deallocateCapacity(size)
-        delegate.connection(self, didReadData: data)
-    }
-    
-    public func write(data: Data) {
-        
-        self.writeData = data
-        
-        let writeRequest = UnsafeMutablePointer<uv_write_t>(allocatingCapacity: 1)
-        
-        let pointer = UnsafeMutablePointer<Int8>(writeData.bytes)
-        
-        writeBuffer.pointee = uv_buf_t(base: pointer, len: writeData.bytes.count)
+    public func write(string: String) {
 
-        writeRequest.pointee.data = unsafeBitCast(callback, 
-                                                  to: UnsafeMutablePointer<Void>.self)
+        self.writeBuffer = Buffer(string: string)
         
-        let stream = UnsafeMutablePointer<uv_stream_t>(client)
-
-        io.write(writeRequest, stream, writeBuffer, 1) { (handle, size) in
-            self.close(writeRequest: handle)
+        let writeSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_WRITE,
+                                                 UInt(socket.raw),
+                                                 0,
+                                                 dispatch_get_main_queue())
+        dispatch_source_set_event_handler(writeSource) {
+            let amount = Darwin.write(self.socket.raw, self.writeBuffer.buffer,
+                                      self.writeBuffer.size)
+            if amount < 0 {
+                dispatch_source_cancel(writeSource)
+            } else if amount == self.writeBuffer.size {
+                dispatch_source_cancel(writeSource)
+            }
+            
+        }
+        dispatch_resume(writeSource)
+        
+        dispatch_source_set_cancel_handler(writeSource) { 
+            self.socket.shutdown()
         }
     }
-    
-    func close(writeRequest: UnsafeMutablePointer<uv_write_t>) {
-        
-        writeRequest.deallocateCapacity(1)
-        
-        let handle = UnsafeMutablePointer<uv_handle_t>(client)
-        
-        io.close(handle) { (handle) in
-            self.delegate.connectionDidFinish(connection: self)
-        }
-    }
-}
-
-public func == (lhs: IncomingConnection, rhs: IncomingConnection) -> Bool {
-    return lhs.identifier == rhs.identifier
 }

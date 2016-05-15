@@ -2,54 +2,42 @@
 //  Buffer.swift
 //  Echo
 //
-//  Created by Elliott Minns on 14/04/2016.
+//  Created by Elliott Minns on 14/05/2016.
 //  Copyright © 2016 Elliott Minns. All rights reserved.
 //
 
 import Foundation
-import CUV
 
 class Buffer {
     
     let size: Int
-    let raw: UnsafeMutablePointer<uv_buf_t>
-    let bits: UnsafeMutablePointer<Int8>
-    let alloced: Bool
-    let data: Data?
     
-    init(size: Int = 1024) {
+    let buffer: UnsafeMutablePointer<Void>
+    
+    // Used to prevent the string from dying.
+    private var bytes: [UInt8] = []
+    
+    init(string: String) {
+        self.bytes = [UInt8](string.utf8)
+        let bytes = UnsafeMutablePointer<UInt8>(self.bytes)
+        self.buffer = UnsafeMutablePointer<Void>(bytes)
+        self.size = self.bytes.count
+    }
+    
+    init(size: Int) {
         self.size = size
-        bits = UnsafeMutablePointer<Int8>(allocatingCapacity: size)
-        raw = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1)
-        raw.pointee = uv_buf_t(base: bits, len: size)
-        alloced = true
-        data = nil
-    }
-    
-    init(data: Data) {
-        self.size = data.size
-        self.data = data
-        raw = UnsafeMutablePointer<uv_buf_t>(allocatingCapacity: 1)
-        bits = UnsafeMutablePointer<Int8>(data.bytes)
-        raw.pointee = uv_buf_t(base: bits, len: size)
-        alloced = true
-    }
-    
-    init(size: size_t, raw: UnsafeMutablePointer<uv_buf_t>) {
-        self.size = Int(size)
-        self.bits = UnsafeMutablePointer<Int8>(allocatingCapacity: Int(size))
-        self.raw = raw
-        alloced = false
-        self.data = nil
+        self.buffer = UnsafeMutablePointer<Void>.alloc(size)
     }
     
     deinit {
-        if data == nil {
-            bits.deallocateCapacity(size)
-        }
-        if alloced {
-            raw.deallocateCapacity(1)
-        }
+//        self.buffer.dealloc(size)
+    }
+    
+    func toString() -> String {
+        let string = String(bytesNoCopy: buffer, length: size,
+                            encoding: NSUTF8StringEncoding,
+                            freeWhenDone: false) ?? ""
+        return string
     }
     
 }
