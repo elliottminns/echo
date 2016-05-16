@@ -14,18 +14,14 @@ public class Connection {
     
     let readBuffer: Buffer
     
-    var writeBuffer: Buffer
+    var writeData: Data
     
     init(socket: Socket) {
         self.socket = socket
         self.readBuffer = Buffer(size: 1024)
-        self.writeBuffer = Buffer(size: 1024)
-        setup()
+        self.writeData = Data()
     }
     
-    func setup() {
-    }
-
     func read(callback: (data: Buffer) -> ()) {
         
         let readSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
@@ -53,21 +49,29 @@ public class Connection {
         dispatch_resume(readSource)
         
     }
-    
+
     public func write(_ string: String) {
 
-        self.writeBuffer = Buffer(string: string)
-        
+        let writeData = Data(string: string)
+        write(writeData)
+    }
+
+    public func write(_ data: Data) {
+        self.writeData = data
         let writeSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_WRITE,
                                                  UInt(socket.raw),
                                                  0,
                                                  dispatch_get_main_queue())!
+
         dispatch_source_set_event_handler(writeSource) {
-            let amount = Darwin.write(self.socket.raw, self.writeBuffer.buffer,
-                                      self.writeBuffer.size)
+
+            let amount = Darwin.write(self.socket.raw, 
+            						  data.raw,
+                                      data.size)
+
             if amount < 0 {
                 dispatch_source_cancel(writeSource)
-            } else if amount == self.writeBuffer.size {
+            } else if amount == data.size {
                 dispatch_source_cancel(writeSource)
             }
             
