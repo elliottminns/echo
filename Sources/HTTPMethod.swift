@@ -8,29 +8,21 @@
 
 import Foundation
 
-public enum HTTPMethod {
-    case GET
-    case POST
-    case PUT
-    case DELETE
-    case PATCH
+public enum HTTPMethod: String {
+    case GET = "GET"
+    case POST = "POST"
+    case PUT = "PUT"
+    case DELETE = "DELETE"
+    case PATCH = "PATCH"
+    case UNKNOWN = "UNKNOWN"
 }
 
 extension HTTPMethod {
     
     init?(string: String) {
-        switch string {
-        case "GET":
-            self = GET
-        case "POST":
-            self = POST
-        case "PUT":
-            self = PUT
-        case "DELETE":
-            self = DELETE
-        case "PATCH":
-            self = PATCH
-        default: 
+        if let method = HTTPMethod.init(rawValue: string) {
+            self = method
+        } else {
             return nil
         }
     }
