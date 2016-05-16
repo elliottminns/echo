@@ -53,10 +53,10 @@ public class Connection {
     public func write(_ string: String) {
 
         let writeData = Data(string: string)
-        write(writeData)
+        write(data: writeData)
     }
 
-    public func write(_ data: Data) {
+    public func write(data data: Data) {
         self.writeData = data
         let writeSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_WRITE,
                                                  UInt(socket.raw),
