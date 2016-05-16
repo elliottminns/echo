@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol HTTPServerDelegate {
-    func server(server: HTTPServer, didRecieveRequest request: HTTPRequest, response: HTTPResponse)
+    func server(_ server: HTTPServer, didRecieveRequest request: HTTPRequest, response: HTTPResponse)
 }
 
 public class HTTPServer {
@@ -46,7 +46,7 @@ public class HTTPServer {
 
 extension HTTPServer: ServerDelegate {
     
-    public func server(server: Server, didCreateConnection connection: Connection) {
+    public func server(_ server: Server, didCreateConnection connection: Connection) {
         
         connection.read { data in
             

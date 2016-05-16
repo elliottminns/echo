@@ -41,19 +41,19 @@ public class HTTPResponse {
         connection.write(http)
     }
     
-    public func send(text text: String) {
+    public func send(text: String) {
         self.headers["Content-Type"] = "text/plain"
         self.body = Buffer(string: text)
         send()
     }
     
-    public func send(html html: String) {
+    public func send(html: String) {
         self.headers["Content-Type"] = "text/html"
         self.body = Buffer(string: html)
         send()
     }
     
-    public func send(error error: String) {
+    public func send(error: String) {
         status = 400
         
     }

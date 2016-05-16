@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol ServerDelegate {
-    func server(server: Server, didCreateConnection connection: Connection)
+    func server(_ server: Server, didCreateConnection connection: Connection)
 }
 
 public class Server {
@@ -69,14 +69,14 @@ public class Server {
     }
     
     func accept() throws -> Connection {
-        let addr = UnsafeMutablePointer<sockaddr>.alloc(1)
+        let addr = UnsafeMutablePointer<sockaddr>(allocatingCapacity: 1)
         var len = socklen_t(0)
         let fd = Darwin.accept(self.socket.raw, addr, &len)
         let client = try Socket(raw: fd)
         return Connection(socket: client)
     }
     
-    private func bind(socket socket: Socket, address: Address) throws {
+    private func bind(socket: Socket, address: Address) throws {
         let r = Darwin.bind(socket.raw,
                             UnsafeMutablePointer<sockaddr>(address.raw),
                             socklen_t(sizeof(sockaddr_in)))

@@ -8,9 +8,7 @@
 
 import Foundation
 
-
-
-struct ParserError: ErrorType {
+struct ParserError: ErrorProtocol {
     let problemArea: String
     let message: String
 }
@@ -26,9 +24,9 @@ struct HTTPParser {
     func parse() throws -> HTTPRequest {
         
         let raw = self.buffer.toString()
-        var lines = raw.componentsSeparatedByString("\r\n")
+        var lines = raw.components(separatedBy: "\r\n")
         let firstLine = lines.removeFirst()
-        let route = try loadRoute(firstLine)
+        let route = try loadRoute(line: firstLine)
         let headers = loadHeaders(&lines)
         let body = lines.last ?? ""
         
@@ -37,7 +35,7 @@ struct HTTPParser {
     }
     
     func loadRoute(line: String) throws -> (method: HTTPMethod, path: String, httpProtocol: String) {
-        let comps = line.componentsSeparatedByString(" ")
+        let comps = line.components(separatedBy: " ")
         guard let methodString = comps.first,
             httpProtocol = comps.last where
             comps.count == 3 else {
@@ -52,14 +50,14 @@ struct HTTPParser {
         return (method: method, path: comps[1], httpProtocol: httpProtocol)
     }
 	
-    func loadHeaders(inout lines: [String]) -> [String: String] {
+    func loadHeaders(_ lines: inout [String]) -> [String: String] {
         var headers: [String: String] = [:]
         
         var currentLine = lines.removeFirst()
         
         repeat {
             
-            let comps = currentLine.componentsSeparatedByString(": ")
+            let comps = currentLine.components(separatedBy: ": ")
             
             if comps.count == 2 {
                 

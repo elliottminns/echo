@@ -26,7 +26,12 @@ class Buffer {
     
     init(size: Int) {
         self.size = size
+        #if !swift(>=3.0)
         self.buffer = UnsafeMutablePointer<Void>.alloc(size)
+        #else
+        self.buffer = UnsafeMutablePointer<Void>(allocatingCapacity: size)
+        #endif
+
     }
     
     deinit {

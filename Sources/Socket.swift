@@ -1,7 +1,7 @@
 
 import Darwin
 
-enum SocketError: ErrorType {
+enum SocketError: ErrorProtocol {
     case NoFileDescriptor
     case CouldNotBind
     case CouldNotListen

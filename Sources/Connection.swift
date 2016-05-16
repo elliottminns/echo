@@ -31,7 +31,7 @@ public class Connection {
         let readSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
                                                 UInt(socket.raw),
                                                 0,
-                                                dispatch_get_main_queue())
+                                                dispatch_get_main_queue())!
         
         dispatch_source_set_event_handler(readSource) {
             
@@ -54,14 +54,14 @@ public class Connection {
         
     }
     
-    public func write(string: String) {
+    public func write(_ string: String) {
 
         self.writeBuffer = Buffer(string: string)
         
         let writeSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_WRITE,
                                                  UInt(socket.raw),
                                                  0,
-                                                 dispatch_get_main_queue())
+                                                 dispatch_get_main_queue())!
         dispatch_source_set_event_handler(writeSource) {
             let amount = Darwin.write(self.socket.raw, self.writeBuffer.buffer,
                                       self.writeBuffer.size)
