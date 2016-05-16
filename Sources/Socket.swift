@@ -1,5 +1,9 @@
 
+#if os(Linux)
+import Glibc
+#else
 import Darwin
+#endif
 
 enum SocketError: ErrorProtocol {
     case NoFileDescriptor
@@ -15,7 +19,7 @@ extension SocketType {
     var sockValue: Int32 {
         switch self {
         case TCP:
-            return SOCK_STREAM
+            return systemSockStream
         }
     }
 }
@@ -52,8 +56,8 @@ struct Socket {
     
     func shutdown() {
         
-        Darwin.close(raw)
-        Darwin.shutdown(raw, SHUT_WR)
+        systemClose(raw)
+        systemShutdown(raw, SHUT_WR)
         
     }
 }

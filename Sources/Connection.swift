@@ -31,7 +31,7 @@ public class Connection {
         
         dispatch_source_set_event_handler(readSource) {
             
-            let amount = Darwin.read(self.socket.raw, self.readBuffer.buffer,
+            let amount = systemRead(self.socket.raw, self.readBuffer.buffer,
                                      self.readBuffer.size)
             if amount < 0 {
                 print("Error with reading")
@@ -65,7 +65,7 @@ public class Connection {
 
         dispatch_source_set_event_handler(writeSource) {
 
-            let amount = Darwin.write(self.socket.raw, 
+            let amount = systemWrite(self.socket.raw, 
             						  data.raw,
                                       data.size)
 

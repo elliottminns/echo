@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if os(Linux)
+import Glibc
+#endif
+
 public protocol ServerDelegate {
     func server(_ server: Server, didCreateConnection connection: Connection)
 }
@@ -55,7 +59,7 @@ public class Server {
         
         try bind(socket: socket, address: address)
         
-        if (Darwin.listen(socket.raw, 128) < 0) {
+        if (systemListen(socket.raw, 128) < 0) {
             throw SocketError.CouldNotListen
         }
         
@@ -71,13 +75,13 @@ public class Server {
     func accept() throws -> Connection {
         let addr = UnsafeMutablePointer<sockaddr>(allocatingCapacity: 1)
         var len = socklen_t(0)
-        let fd = Darwin.accept(self.socket.raw, addr, &len)
+        let fd = systemAccept(self.socket.raw, addr, &len)
         let client = try Socket(raw: fd)
         return Connection(socket: client)
     }
     
     private func bind(socket: Socket, address: Address) throws {
-        let r = Darwin.bind(socket.raw,
+        let r = systemBind(socket.raw,
                             UnsafeMutablePointer<sockaddr>(address.raw),
                             socklen_t(sizeof(sockaddr_in)))
         if r < 0 {
