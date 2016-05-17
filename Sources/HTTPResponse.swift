@@ -53,6 +53,10 @@ public class HTTPResponse {
         send()
     }
     
+    public func send(data: Data) {
+        connection.write(data: data)
+    }
+    
     public func send(error: String) {
         status = 400
         
