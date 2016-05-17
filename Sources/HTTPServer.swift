@@ -22,7 +22,12 @@ public class HTTPServer {
     
     var server: Server?
     
-    var delegate: HTTPServerDelegate?
+    public var delegate: HTTPServerDelegate?
+    
+    public init() {
+        currentPort = 80
+        self.delegate = nil
+    }
     
     public init(delegate: HTTPServerDelegate) {
         currentPort = 80
