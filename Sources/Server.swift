@@ -10,6 +10,7 @@ import Foundation
 
 #if os(Linux)
 import Glibc
+import Dispatch
 #endif
 
 public protocol ServerDelegate {
@@ -54,9 +55,11 @@ public class Server {
             throw SocketError.CouldNotListen
         }
         
+	#if !os(Linux)
         var no_sig_pipe: Int32 = 1
         setsockopt(socket.raw, SOL_SOCKET, SO_NOSIGPIPE, &no_sig_pipe, socklen_t(sizeof(Int32)))
-        
+        #endif
+
         try bind(socket: socket, address: address)
         
         if (systemListen(socket.raw, 128) < 0) {
@@ -69,7 +72,11 @@ public class Server {
             }
         })
         
+        #if os(Linux)
+        dispatch_resume(dispatch_object_t(_ds: dispatcher))
+        #else
         dispatch_resume(dispatcher)
+        #endif
     }
     
     func accept() throws -> Connection {

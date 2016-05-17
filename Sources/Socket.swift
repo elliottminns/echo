@@ -48,16 +48,16 @@ struct Socket {
         self.type = type
     }
     
-    init() throws {
+    init(type: SocketType = .TCP) throws {
         
-        let fd = socket(AF_INET, SOCK_STREAM, 0)
-        try self.init(raw: fd)
+        let fd = socket(AF_INET, type.sockValue, 0)
+        try self.init(raw: fd, type: type)
     }
     
     func shutdown() {
         
         systemClose(raw)
-        systemShutdown(raw, SHUT_WR)
+        systemShutdown(raw, systemSHUT_RDWR)
         
     }
 }

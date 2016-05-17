@@ -8,6 +8,10 @@
 
 import Foundation
 
+#if os(Linux)
+import Dispatch
+#endif
+
 public class Connection {
     
     let socket: Socket
@@ -46,7 +50,11 @@ public class Connection {
             }
         }
         
+        #if os(Linux)
+        dispatch_resume(dispatch_object_t(_ds: readSource))
+        #else
         dispatch_resume(readSource)
+        #endif
         
     }
 
@@ -76,7 +84,12 @@ public class Connection {
             }
             
         }
+
+        #if os(Linux)
+        dispatch_resume(dispatch_object_t(_ds: writeSource))
+        #else
         dispatch_resume(writeSource)
+        #endif
         
         dispatch_source_set_cancel_handler(writeSource) { 
             self.socket.shutdown()
