@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol HTTPServerDelegate {
-    func server(_ server: HTTPServer, didRecieveRequest request: HTTPRequest, response: HTTPResponse)
+    func server(_ server: HTTPServer, didReceiveRequest request: HTTPRequest, response: HTTPResponse)
 }
 
 public class HTTPServer {
@@ -60,7 +60,7 @@ extension HTTPServer: ServerDelegate {
                 request.connection = connection
                 
                 let response = HTTPResponse(connection: connection)
-                self.delegate?.server(self, didRecieveRequest: request,
+                self.delegate?.server(self, didReceiveRequest: request,
                     response: response)
             } catch {
                 if let error = error as? ParserError {

@@ -1,6 +1,7 @@
 #if os(Linux)
 import Glibc
 let systemSockStream = Int32(SOCK_STREAM.rawValue)
+let systemSHUT_RDWR = Int32(SHUT_RDWR)
 let systemAccept = Glibc.accept
 let systemClose = Glibc.close
 let systemShutdown = Glibc.shutdown
@@ -14,6 +15,7 @@ let systemRead = Glibc.read
 #else
 import Darwin.C
 let systemSockStream = SOCK_STREAM
+let systemSHUT_RDWR = SHUT_RDWR
 let systemAccept = Darwin.accept
 let systemClose = Darwin.close
 let systemShutdown = Darwin.shutdown
