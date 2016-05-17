@@ -8,24 +8,21 @@
 
 import Echo
 
-let file = "/Users/Elliott/Desktop/ss.png"
-
-FileSystem.readFile(atPath: file) { (data, error) in
-    print(data?.bytes.count)
-}
-
-class Delegate: ServerDelegate {
-    
-    func server(_ server: Server, didRecieveConnection connection: Connection) {
-        _ = ""
+class Delegate: HTTPServerDelegate {
+    func server(server: HTTPServer, didRecieveRequest request: HTTPRequest, response: HTTPResponse) {
+        let html = "<h1>Hello World</h1><p>The Swift Web Server is Working</p>"
+        response.send(html: html)
     }
 }
 
-let server = Server()
+let server = HTTPServer(delegate: Delegate())
 
-server.delegate = Delegate()
-
-server.listen(port: 3600) { error in
-    print(error == nil ? "Listening on port 3500" : "error listening")
-
+do {
+    try server.listen(4000)
+    print("Server listening on port: \(server.port)" )
+} catch {
+    print("Something went wrong")
 }
+
+
+NSRunLoop.mainRunLoop().run()

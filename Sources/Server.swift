@@ -1,90 +1,99 @@
+//
+//  Server.swift
+//  Echo
+//
+//  Created by Elliott Minns on 14/05/2016.
+//  Copyright © 2016 Elliott Minns. All rights reserved.
+//
 
-import CUV
+import Foundation
 
-enum ServerError: ErrorProtocol {
-    case ListenError
+#if os(Linux)
+import Glibc
+import Dispatch
+#endif
+
+public protocol ServerDelegate {
+    func server(_ server: Server, didCreateConnection connection: Connection)
 }
 
-typealias uv_stream = ImplicitlyUnwrappedOptional<UnsafeMutablePointer<uv_stream_t>>
+public class Server {
+    
+    let type: SocketType
 
-internal func uv_connection_cb_fn(request: uv_stream, status: Int32) {
-    let data = request.pointee.data
-    let server = unsafeBitCast(data, to: Server.self)
-    server.handleConnection(stream: request)
-}
-
-public protocol ServerDelegate: class {
-    func server(_ server: Server, didRecieveConnection connection: IncomingConnection)
-}
-
-public final class Server {
+    let socket: Socket
     
-    var tcp: UnsafeMutablePointer<uv_tcp_t>
+    let port: Int
     
-    var bind_addr: UnsafeMutablePointer<sockaddr_in>
+    let dispatcher: dispatch_source_t
     
-    public weak var delegate: ServerDelegate?
+    let delegate: ServerDelegate
     
-    var connections: Set<IncomingConnection>
-    
-    var currentIdentifier: Int
-    
-    public init() {
-        tcp = UnsafeMutablePointer<uv_tcp_t>(allocatingCapacity: 1)
-        bind_addr = UnsafeMutablePointer<sockaddr_in>(allocatingCapacity: 1)
-        connections = []
-        currentIdentifier = 0
-        tcp.pointee.data = unsafeBitCast(self,
-                                         to: UnsafeMutablePointer<Void>.self)
-        
+    init(socket: Socket, port: Int, delegate: ServerDelegate, type: SocketType = .TCP) {
+        self.socket = socket
+        self.port = port
+        self.delegate = delegate
+        self.type = type
+        dispatcher = dispatch_source_create(DISPATCH_SOURCE_TYPE_READ,
+                                            UInt(socket.raw),
+                                            0, dispatch_get_main_queue())
     }
     
-    deinit {
-        tcp.deinitialize(count: 1)
-        bind_addr.deinitialize(count: 1)
+    public convenience init(port: Int, delegate: ServerDelegate, type: SocketType) throws {
+        let socket = try Socket()
+        self.init(socket: socket, port: port, delegate: delegate)
     }
     
-    public func listen(port: Int, handler: (error: ErrorProtocol?) -> ()) {
+    func listen() throws {
         
-        uv_ip4_addr([Int8(0),Int8(0),Int8(0),Int8(0)], Int32(port), bind_addr)
+        let address = try Address(address: "0.0.0.0", port: self.port)
         
-        uv_tcp_init(uv_default_loop(), tcp)
+        var value = 1
         
-        uv_tcp_bind(tcp, UnsafePointer<sockaddr>(bind_addr), 0)
-        
-        let stream = UnsafeMutablePointer<uv_stream_t>(tcp)
-        
-        let result = uv_listen(stream, 1000, uv_connection_cb_fn)
-        
-        guard result == 0 else {
-            handler(error: ServerError.ListenError)
-            return
+        if setsockopt(socket.raw, SOL_SOCKET, SO_REUSEADDR,
+                      &value, socklen_t(sizeof(Int32))) == -1 {
+            throw SocketError.CouldNotListen
         }
         
-        handler(error: nil)
+	#if !os(Linux)
+        var no_sig_pipe: Int32 = 1
+        setsockopt(socket.raw, SOL_SOCKET, SO_NOSIGPIPE, &no_sig_pipe, socklen_t(sizeof(Int32)))
+        #endif
+
+        try bind(socket: socket, address: address)
         
-        uv_run(uv_default_loop(), UV_RUN_DEFAULT)
+        if (systemListen(socket.raw, 128) < 0) {
+            throw SocketError.CouldNotListen
+        }
+        
+        dispatch_source_set_event_handler(dispatcher, {
+            if let connection = try? self.accept() {
+                self.delegate.server(self, didCreateConnection: connection)
+            }
+        })
+        
+        #if os(Linux)
+        dispatch_resume(dispatch_object_t(_ds: dispatcher))
+        #else
+        dispatch_resume(dispatcher)
+        #endif
     }
     
-    public func handleConnection(stream: UnsafeMutablePointer<uv_stream_t>) {
-        let connection = IncomingConnection(connection: stream, delegate: self, identifier: currentIdentifier)
-        currentIdentifier += 1
-        connections.insert(connection)
-        do {
-            try connection.beginRead()
-        } catch {
-            connections.remove(connection)
+    func accept() throws -> Connection {
+        let addr = UnsafeMutablePointer<sockaddr>(allocatingCapacity: 1)
+        var len = socklen_t(0)
+        let fd = systemAccept(self.socket.raw, addr, &len)
+        let client = try Socket(raw: fd)
+        return Connection(socket: client)
+    }
+    
+    private func bind(socket: Socket, address: Address) throws {
+        let r = systemBind(socket.raw,
+                            UnsafeMutablePointer<sockaddr>(address.raw),
+                            socklen_t(sizeof(sockaddr_in)))
+        if r < 0 {
+            throw SocketError.CouldNotBind
         }
     }
-}
-
-extension Server: ConnectionDelegate {
     
-    func connection(_ connection: IncomingConnection, didReadData data: Data) {
-        self.delegate?.server(self, didRecieveConnection: connection)
-    }
-    
-    func connectionDidFinish(connection: IncomingConnection) {
-        connections.remove(connection)
-    }
 }
