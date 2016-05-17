@@ -33,6 +33,7 @@ public class Connection {
                                                 0,
                                                 dispatch_get_main_queue())!
         
+
         dispatch_source_set_event_handler(readSource) {
             
             let amount = systemRead(self.socket.raw, self.readBuffer.buffer,
@@ -71,11 +72,12 @@ public class Connection {
                                                  0,
                                                  dispatch_get_main_queue())!
 
+        var amount = 0
         dispatch_source_set_event_handler(writeSource) {
 
-            let amount = systemWrite(self.socket.raw, 
-            						  data.raw,
-                                      data.size)
+            amount += systemWrite(self.socket.raw,
+                                  data.raw.advanced(by: amount),
+                                  data.size - amount)
 
             if amount < 0 {
                 dispatch_source_cancel(writeSource)
