@@ -1,3 +1,5 @@
+This project is being developed as [Fire](https://github.com/elliottminns/fire)
+
 # Echo
 
 Echo is a simple way to create an event loop and use GCD in Swift for Linux and OSX
